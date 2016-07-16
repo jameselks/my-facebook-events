@@ -1,0 +1,40 @@
+/*REMOVE FROM PROD*/
+#secondary {
+    display: none !important;
+}
+
+@media screen and (min-width: 56.875em) {
+    .content-area {
+        width: 100% !important;
+    }
+}
+/*END*/ 
+
+#map { 
+	height:450px; 
+}
+
+#map #infowindow {
+	margin:0.5em 0;
+	max-width:300px;
+	text-align: center;
+}
+
+#map #infowindow h2 {
+	margin:0.5em 0 0 0;
+	font-size:1em;
+}
+
+#map #infowindow img {
+	max-width: 100%;
+	width: 180px;
+}
+
+#map #infowindow p {
+	margin:0 0 1em 0;
+}
+
+#no-geo article {
+	margin-top: 1em;
+	line-height: 1.4em;
+}
