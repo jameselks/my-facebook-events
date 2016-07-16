@@ -23,6 +23,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       elks-events
  * Domain Path:       /languages
+ * GitHub Plugin URI: https://github.com/jameselks/elks-events
+ * GitHub Branch:     master 
  */
 
 // If this file is called directly, abort.
