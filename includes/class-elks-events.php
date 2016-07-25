@@ -190,12 +190,16 @@ class Elks_Events {
 
 		$plugin_public = new Elks_Events_Public( $this->get_plugin_name(), $this->get_version() );
 
+		//Register styles and scripts
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'e2_register_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'e2_register_scripts' );
 
+		//Event post type
 		$this->loader->add_action( 'init', $plugin_public, 'e2_create_post_type' );
 
+		//Shortcodes
 		$this->loader->add_shortcode( 'e2_map_today', $plugin_public, 'e2_map_today' );
+		$this->loader->add_shortcode( 'e2_list_30days', $plugin_public, 'e2_list_30days' );
 
 	}
 

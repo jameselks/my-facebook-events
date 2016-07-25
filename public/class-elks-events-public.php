@@ -79,7 +79,59 @@ class Elks_Events_Public {
 	}
 
 	/**
-	 * Shortcode for today's events.
+	 * Shortcode for list of events in next 30 days.
+	 *
+	 * @since    1.1.0
+	 */
+	public function e2_list_30days() {
+
+		$output = "";
+
+		// The Query
+		$args = array (
+			'post_type' 		=> 'events',
+			'posts_per_page'	=> -1,
+			'orderby'			=> 'e2_fb_start_date',
+			'order'				=> 'ASC',
+			'meta_key'			=> 'e2_fb_start_date',
+			'meta_query'		=> array(
+				'key'				=> 'e2_fb_start_date',
+				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+30 days")) ),
+				'compare'			=> 'BETWEEN',
+				'type'				=> 'DATE'
+				),
+			);
+		$the_query = new WP_Query( $args );
+
+		// The Loop
+		if ( $the_query->have_posts() ) {
+			$output = $output . '<div id="e2-events">';
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$the_id = get_the_id();
+				$output = $output . '<div class="event">';
+				$output = $output . '<h2>' . get_the_title() . '</h2>';
+				$output = $output . '<p>' . get_post_meta( $the_id, 'e2_fb_start', true ) . '</p>';
+				$output = $output . '<p>' . get_the_content() . '</p>';
+				$output = $output . '<div>' . get_the_post_thumbnail( $the_id, 'medium' ) . '</div>';
+
+				// ' | ' . get_post_meta( get_the_id(), 'e2_fb_start_date', true ) . '</li>';
+				$output = $output . '</div>';
+			}
+			$output = $output . '</ul>';
+			
+			/* Restore original Post Data */
+			wp_reset_postdata();
+		} else {
+			$output = $output . '<p>No posts found.</p>';
+		}
+
+		return $output;
+
+	}
+
+	/**
+	 * Shortcode for map of today's events.
 	 *
 	 * @since    1.0.0
 	 */
