@@ -1,6 +1,17 @@
-//'use strict';
-var map;
 
+jQuery('.accordion .accordion-toggle').click(function(){
+
+  //Expand or collapse this panel
+  jQuery(this).next().slideToggle('fast');
+  jQuery(this).toggleClass('accordion-open');
+  jQuery(this).toggleClass('accordion-closed');
+
+  //Hide the other panels
+  //jQuery(".accordion-content").not(jQuery(this).next()).slideUp('fast');
+
+});
+
+var map;
 function initMap() {
 
 	var json = jQuery.getJSON(e2js.uploadsUrl + "/e2-map.json", function() {

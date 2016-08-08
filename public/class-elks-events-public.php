@@ -62,6 +62,7 @@ class Elks_Events_Public {
 	public function e2_register_styles() {
 
 		wp_register_style( $this->plugin_name . '-css', plugin_dir_url( __FILE__ ) . 'css/elks-events-public.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name . '-boostrap-grid-css', plugin_dir_url( __FILE__ ) . 'css/elks-events-bootstrap-grid.css', array(), $this->version, 'all' );
 
 	}
 
@@ -85,6 +86,11 @@ class Elks_Events_Public {
 	 */
 	public function e2_list_30days() {
 
+		//Get the generic E2 CSS and JS onboard
+		wp_enqueue_style( $this->plugin_name . '-css' );
+		wp_enqueue_style( $this->plugin_name . '-boostrap-grid-css' );
+		wp_enqueue_script( $this->plugin_name . '-js' );
+
 		$output = "";
 
 		// The Query
@@ -106,19 +112,50 @@ class Elks_Events_Public {
 		// The Loop
 		if ( $the_query->have_posts() ) {
 			$output = $output . '<div id="e2-events">';
+			$previous_date = new DateTime( date('Y-m-d', strtotime(current_time('Y-m-d') . "-1 days")) );
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 				$the_id = get_the_id();
-				$output = $output . '<div class="event">';
-				$output = $output . '<h2>' . get_the_title() . '</h2>';
-				$output = $output . '<p>' . get_post_meta( $the_id, 'e2_fb_start', true ) . '</p>';
-				$output = $output . '<p>' . get_the_content() . '</p>';
-				$output = $output . '<div>' . get_the_post_thumbnail( $the_id, 'medium' ) . '</div>';
+				$the_start = new DateTime(get_post_meta( $the_id, 'e2_fb_start', true ));
+				if ( $the_start->diff($previous_date)->format('%R%a days') != 0 ) {
+					$start_formatted = $the_start->format('Y-m-d');
+					if ($start_formatted == current_time('Y-m-d')) {
+						$output = $output . '<h2>Today</h2>';
+					} elseif ( $start_formatted == date('Y-m-d', strtotime(current_time('Y-m-d') . "+1 days")) ) {
+						$output = $output . '<h2>Tomorrow</h2>';
+					} else {
+						$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
+					}
+					/*
+					switch ( $the_start->format('Y-m-d') ) {
+						case current_time('Y-m-d'):
+							$output = $output . '<h2>Today</h2>';
+						case strtotime(current_time('Y-m-d') . "+1 days"):
+							$output = $output . '<h2>Tomorrow</h2>';
+						default:
+							$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
+					}
+					*/
+				}
+				$previous_date = $the_start;
+				$output = $output . '<div class="event container-fluid">';
+				$output = $output . '	<div class="row">';
+				$output = $output . '		<div class="col-sm-4">';
+				$output = $output . 			get_the_post_thumbnail( $the_id, 'medium' );
+				$output = $output . '		</div>';
+				$output = $output . '		<div class="col-sm-8 event-details">';				
+				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
+				$output = $output . '			<p>' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
+				$output = $output . '			<div class="event-more accordion">';
 
-				// ' | ' . get_post_meta( get_the_id(), 'e2_fb_start_date', true ) . '</li>';
+				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
+				$output = $output . '				<p class="event-description accordion-content">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
+				$output = $output . '			</div>';				
+				$output = $output . '		</div>';
+				$output = $output . '	</div>';
 				$output = $output . '</div>';
 			}
-			$output = $output . '</ul>';
+			$output = $output . '</div>';
 			
 			/* Restore original Post Data */
 			wp_reset_postdata();
@@ -136,11 +173,15 @@ class Elks_Events_Public {
 	 * @since    1.0.0
 	 */
 	public function e2_map_today() {
-		// Get the Google Maps script on board
+		
+		//Get the generic E2 CSS and JS onboard
 		wp_enqueue_style( $this->plugin_name . '-css' );
+		wp_localize_script( $this->plugin_name . '-js', 'e2js', array( 'uploadsUrl' => wp_upload_dir()['baseurl'], 'pluginUrl' => plugins_url('', __FILE__) ));
+
+		// Get the Google Maps script on board
 		wp_enqueue_script( 'google-maps-api' );
 		wp_enqueue_script( 'geolocation-marker' );
-		wp_localize_script( $this->plugin_name . '-js', 'e2js', array( 'uploadsUrl' => wp_upload_dir()['baseurl'], 'pluginUrl' => plugins_url('', __FILE__) ));
+
 
 		// Write the map div. Javascript takes care of the rest.
 		return "<div id='map'></div>";
