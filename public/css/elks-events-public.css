@@ -1,14 +1,73 @@
-/*REMOVE FROM PROD*/
-#secondary {
-    display: none !important;
+/* LIST
+*/
+
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
-@media screen and (min-width: 56.875em) {
-    .content-area {
-        width: 100% !important;
-    }
+#e2-events .event {
+	margin: 20px 0;
+	border-radius: 2px;
 }
-/*END*/ 
+
+#e2-events h3, #e2-events h4 {
+	margin:0;
+	padding:0;
+}
+
+#e2-events h4:before {
+    display: inline-block;
+    padding-right: 5px;
+    font-size: 1.4em;
+    font-family: dashicons;
+    text-decoration: inherit;
+    font-weight: 400;
+    font-style: normal;
+    vertical-align: top;
+    text-align: center;
+    -webkit-transition: color .1s ease-in 0;
+    transition: color .1s ease-in 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#e2-events h4.accordion-closed:before {
+	content: "\f347";
+}
+
+#e2-events h4.accordion-open:before {
+	content: "\f343";
+}
+
+#e2-events .accordion {
+
+}
+
+#e2-events .accordion-toggle {
+	margin: 5px 0;
+}
+
+#e2-events .accordion p {
+	line-height: 1.5em;
+}
+
+#e2-events p {
+	margin: 0;
+	padding: 0;
+}
+
+#e2-events .accordion-toggle { 
+	cursor: pointer; 
+}
+#e2-events .accordion-content { 
+	display: none; 
+}
+
+
+/* MAP
+*/ 
 
 #map { 
 	height:450px; 
