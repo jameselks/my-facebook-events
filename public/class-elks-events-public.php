@@ -117,7 +117,7 @@ class Elks_Events_Public {
 				$the_query->the_post();
 				$the_id = get_the_id();
 				$the_start = new DateTime(get_post_meta( $the_id, 'e2_fb_start', true ));
-				if ( $the_start->diff($previous_date)->format('%R%a days') != 0 ) {
+				if ($the_start->format('Y-m-d') != $previous_date->format('Y-m-d')) {
 					$start_formatted = $the_start->format('Y-m-d');
 					if ($start_formatted == current_time('Y-m-d')) {
 						$output = $output . '<h2>Today</h2>';
@@ -126,16 +126,6 @@ class Elks_Events_Public {
 					} else {
 						$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
 					}
-					/*
-					switch ( $the_start->format('Y-m-d') ) {
-						case current_time('Y-m-d'):
-							$output = $output . '<h2>Today</h2>';
-						case strtotime(current_time('Y-m-d') . "+1 days"):
-							$output = $output . '<h2>Tomorrow</h2>';
-						default:
-							$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
-					}
-					*/
 				}
 				$previous_date = $the_start;
 				$output = $output . '<div class="event container-fluid">';
