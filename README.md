@@ -27,6 +27,17 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 1. Upload `elks-events` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
+## Configuration
+
+... coming ...
+
+## Usage
+
+Two shortcodes:
+
+`[e2_map_today]` to display a map of todays events.
+
+`[e2_list_30days]` to display a list of events for the next 30 days.
 
 ## Changelog
 
