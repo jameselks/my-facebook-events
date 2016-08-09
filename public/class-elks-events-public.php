@@ -135,11 +135,14 @@ class Elks_Events_Public {
 				$output = $output . '		</div>';
 				$output = $output . '		<div class="col-sm-8 event-details">';				
 				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
-				$output = $output . '			<p>' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
+				$output = $output . '			<p class="event_start">' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
 				$output = $output . '			<div class="event-more accordion">';
 
 				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
-				$output = $output . '				<p class="event-description accordion-content">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
+				$output = $output . '				<div class="event-description accordion-content">';
+				$output = $output . '					<p class="event-description">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
+				$output = $output . '					<p class="event-link"><a href="https://www.facebook.com/events/' . get_post_meta( $the_id, 'e2_fb_id', true ) . '" target="_blank">View on Facebook</a></p>';
+				$output = $output . '				</div>';
 				$output = $output . '			</div>';				
 				$output = $output . '		</div>';
 				$output = $output . '	</div>';

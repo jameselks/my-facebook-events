@@ -41,28 +41,26 @@
 	content: "\f343";
 }
 
-#e2-events .accordion {
-
-}
-
-#e2-events .accordion-toggle {
-	margin: 5px 0;
-}
-
-#e2-events .accordion p {
-	line-height: 1.5em;
-}
-
-#e2-events p {
+#e2-events p.event_start {
 	margin: 0;
 	padding: 0;
 }
 
-#e2-events .accordion-toggle { 
-	cursor: pointer; 
+#e2-events .accordion p {
+	line-height: 1.5em;
+	margin-bottom: 10px;
 }
+
+#e2-events .accordion-toggle {
+	margin: 5px 0;
+	cursor: pointer;
+}
+
 #e2-events .accordion-content { 
-	display: none; 
+	display: none;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ebebeb;
 }
 
 
