@@ -1,4 +1,5 @@
 /* LIST
+   =-=-=-=-=-=-=-=
 */
 
 .group:after {
@@ -25,6 +26,13 @@
 	padding-left: 30px;
 	padding-right: 30px;
 }
+
+/*
+@media (min-width: 768px) {
+  .something {
+    float: left;
+}
+*/
 
 #e2-events h3, #e2-events h4 {
 	margin:0;
@@ -79,6 +87,7 @@
 
 
 /* MAP
+   =-=-=-=-=-=-=-=
 */ 
 
 #map { 
