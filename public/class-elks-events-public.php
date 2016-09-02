@@ -87,6 +87,7 @@ class Elks_Events_Public {
 	public function e2_list_30days() {
 
 		//Get the generic E2 CSS and JS onboard
+		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_style( $this->plugin_name . '-css' );
 		wp_enqueue_style( $this->plugin_name . '-boostrap-grid-css' );
 		wp_enqueue_script( $this->plugin_name . '-js' );
@@ -130,7 +131,7 @@ class Elks_Events_Public {
 				$previous_date = $the_start;
 				$output = $output . '<div class="event container-fluid">';
 				$output = $output . '	<div class="row">';
-				$output = $output . '		<div class="col-sm-4">';
+				$output = $output . '		<div class="col-sm-4 event-image-container">';
 				$output = $output . 			get_the_post_thumbnail( $the_id, 'medium' );
 				$output = $output . '		</div>';
 				$output = $output . '		<div class="col-sm-8 event-details">';				
