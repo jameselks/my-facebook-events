@@ -39,14 +39,15 @@
 		flex-direction: row;
 		overflow: hidden;
 		margin-bottom: -10px;
+		padding-right: 0;
 	}
 
 	#e2-events .event img {
 		height: 100%;
-		width: initial;
+		width: 100%;
 		max-width: none;
-		min-height: 130px;
-		max-height: 180px;
+		min-height: 120px;
+		max-height: 120px;
 	}
 
 }
@@ -54,6 +55,12 @@
 #e2-events h3, #e2-events h4 {
 	margin:0;
 	padding:0;
+}
+
+#e2-events h3 {
+	font-size: 14px;
+	margin-top:10px;
+	margin-right:10px;
 }
 
 #e2-events h4:before {
@@ -81,8 +88,9 @@
 }
 
 #e2-events p.event_start {
-	margin: 0;
+	margin: 5px 0 10px 0;
 	padding: 0;
+	line-height: 1.2em;
 }
 
 #e2-events .accordion p {
