@@ -45,6 +45,7 @@
 		height: 100%;
 		width: initial;
 		max-width: none;
+		min-height: 130px;
 		max-height: 180px;
 	}
 

@@ -132,7 +132,7 @@ class Elks_Events_Public {
 				$output = $output . '<div class="event container-fluid">';
 				$output = $output . '	<div class="row">';
 				$output = $output . '		<div class="col-sm-4 event-image-container">';
-				$output = $output . 			get_the_post_thumbnail( $the_id, 'medium' );
+				$output = $output . 			get_the_post_thumbnail( $the_id, array(400, 200) );
 				$output = $output . '		</div>';
 				$output = $output . '		<div class="col-sm-8 event-details">';				
 				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
