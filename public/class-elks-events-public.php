@@ -103,7 +103,7 @@ class Elks_Events_Public {
 			'meta_key'			=> 'e2_fb_start_date',
 			'meta_query'		=> array(
 				'key'				=> 'e2_fb_start_date',
-				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+30 days")) ),
+				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+21 days")) ),
 				'compare'			=> 'BETWEEN',
 				'type'				=> 'DATE'
 				),
