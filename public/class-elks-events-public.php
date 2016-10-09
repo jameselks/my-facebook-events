@@ -103,7 +103,7 @@ class Elks_Events_Public {
 			'meta_key'			=> 'e2_fb_start_date',
 			'meta_query'		=> array(
 				'key'				=> 'e2_fb_start_date',
-				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+15 days")) ),
+				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+" . intval(get_option('events_get_days')) . " days")) ),
 				'compare'			=> 'BETWEEN',
 				'type'				=> 'DATE'
 				),
@@ -118,7 +118,9 @@ class Elks_Events_Public {
 				$the_query->the_post();
 				$the_id = get_the_id();
 				$the_start = new DateTime(get_post_meta( $the_id, 'e2_fb_start', true ));
+				$is_first = false;
 				if ($the_start->format('Y-m-d') != $previous_date->format('Y-m-d')) {
+					$is_first = true;
 					$start_formatted = $the_start->format('Y-m-d');
 					if ($start_formatted == current_time('Y-m-d')) {
 						$output = $output . '<h2>Today</h2>';
@@ -130,7 +132,11 @@ class Elks_Events_Public {
 					}
 				}
 				$previous_date = $the_start;
-				$output = $output . '<div class="event container-fluid">';
+				if ($is_first) {
+					$output = $output . '<div class="event container-fluid first">';
+				} else {
+					$output = $output . '<div class="event container-fluid">';
+				}
 				$output = $output . '	<div class="row">';
 				$output = $output . '		<div class="col-sm-4 event-image-container">';
 				$output = $output . 			get_the_post_thumbnail( $the_id, array(400, 200) );
