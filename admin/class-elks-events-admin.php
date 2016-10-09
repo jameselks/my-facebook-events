@@ -90,6 +90,8 @@ class Elks_Events_Admin {
 		register_setting( 'e2-group', 'radius_lat' );
 		register_setting( 'e2-group', 'radius_lng' );
 		register_setting( 'e2-group', 'radius' );
+		register_setting( 'e2-group', 'events_get_days' );
+		register_setting( 'e2-group', 'fb_get_events' );
 	}
 
 	public function enqueue_styles() {
@@ -251,7 +253,7 @@ class Elks_Events_Admin {
 	 * @since    1.0.0
 	 */	
 
-		$log = 'Started at ' . current_time('Y-m-d h:i:sa').' Wordpress time.' . PHP_EOL;
+		$log = 'Started at:  ' . current_time('Y-m-d h:i:sa').' Wordpress time.' . PHP_EOL;
 
 		if ($echo_results) {
 			echo '<div id="progress"><p>Connecting to Facebook</p>';
@@ -273,7 +275,7 @@ class Elks_Events_Admin {
 		  array(
 		    'fields' => 'id,name,description,cover,start_time,end_time,owner,place,updated_time',
 		    'type' => 'attending',
-		    'limit' => '150'
+		    'limit' => get_option('fb_get_events')
 		  )
 		);
 
@@ -352,10 +354,14 @@ class Elks_Events_Admin {
 
 			// Try and geocode if there is a location name, but no lat/lng
 			if ($do_geocode && empty($e_latitude) ) {
+					$log = $log . 'Attempting geocode for: ' . $e_location . PHP_EOL;
 					$geocode = apply_filters('e2_geocode_place', $e_location, get_option('radius'), array('lat'=>get_option('radius_lat'),'lng'=>get_option('radius_lng')), get_option('api_key_gp'));
 					if (!empty($geocode)) {
+						$log = $log . 'Geocode successful: ' . $geocode['lat'] . ',' . $geocode['lng'] . PHP_EOL;
 						$e_latitude = $geocode['lat'];
 						$e_longitude = $geocode['lng'];
+					} else {
+						$log = $log . 'Geocode unsuccessful.' . PHP_EOL;
 					};
 			};
 
@@ -448,7 +454,7 @@ class Elks_Events_Admin {
 			echo '</div>';
 		}
 
-		$log = $log . 'Completed at '.current_time('Y-m-d h:i:sa').' Wordpress time.' . PHP_EOL . PHP_EOL;
+		$log = $log . 'Completed at ' . current_time('Y-m-d h:i:sa') . ' Wordpress time.' . PHP_EOL . PHP_EOL;
 		if (!file_exists(ABSPATH . 'wp-content/uploads/e2log')) {
 		    wp_mkdir_p(ABSPATH . 'wp-content/uploads/e2log');
 		}	
