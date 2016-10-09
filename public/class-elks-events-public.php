@@ -103,7 +103,7 @@ class Elks_Events_Public {
 			'meta_key'			=> 'e2_fb_start_date',
 			'meta_query'		=> array(
 				'key'				=> 'e2_fb_start_date',
-				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+30 days")) ),
+				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+15 days")) ),
 				'compare'			=> 'BETWEEN',
 				'type'				=> 'DATE'
 				),
@@ -122,6 +122,7 @@ class Elks_Events_Public {
 					$start_formatted = $the_start->format('Y-m-d');
 					if ($start_formatted == current_time('Y-m-d')) {
 						$output = $output . '<h2>Today</h2>';
+						$output = $output . '<div id="today-map"><p>Want to know where today\'s exhibitions are?</p><a href="/today/" class="btn btn-secondary">Map of today\'s exhibitions</a></div>';
 					} elseif ( $start_formatted == date('Y-m-d', strtotime(current_time('Y-m-d') . "+1 days")) ) {
 						$output = $output . '<h2>Tomorrow</h2>';
 					} else {
@@ -132,7 +133,7 @@ class Elks_Events_Public {
 				$output = $output . '<div class="event container-fluid">';
 				$output = $output . '	<div class="row">';
 				$output = $output . '		<div class="col-sm-4 event-image-container">';
-				$output = $output . 			get_the_post_thumbnail( $the_id, 'medium' );
+				$output = $output . 			get_the_post_thumbnail( $the_id, array(400, 200) );
 				$output = $output . '		</div>';
 				$output = $output . '		<div class="col-sm-8 event-details">';				
 				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
@@ -140,7 +141,7 @@ class Elks_Events_Public {
 				$output = $output . '			<div class="event-more accordion">';
 
 				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
-				$output = $output . '				<div class="event-description accordion-content">';
+				$output = $output . '				<div class="event-description accordion-content" style="display:none;">';
 				$output = $output . '					<p class="event-description">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
 				$output = $output . '					<p class="event-link"><a href="https://www.facebook.com/events/' . get_post_meta( $the_id, 'e2_fb_id', true ) . '" target="_blank">View on Facebook</a></p>';
 				$output = $output . '				</div>';
