@@ -3,7 +3,7 @@
 
 	jQuery(function() {
 		jQuery('#status').append( '<p>Loading Facebook things.</p>' );
-		jQuery('#progress').hide('slow');
+		//jQuery('#progress').hide('slow');
 	});
 
 	// This is called with the results from from FB.getLoginStatus().

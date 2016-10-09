@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Elks Events
  * Plugin URI:        http://jameselks.com/elks-events
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Personal event manager for Facebook events in Wordpress.
  * Version:           1.0.0
  * Author:            James Elks
  * Author URI:        http://jameselks.com

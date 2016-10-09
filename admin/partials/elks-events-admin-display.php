@@ -60,7 +60,14 @@ if (isset($_POST['import'])) {
 				<label for="radius">Google Places search radius</label>
 				<input type='text' name='radius' id='radius' value='<?php echo esc_attr( get_option('radius') ); ?>' />
 			</div>									
-
+			<div>
+				<label for="events_get_days">Number of days into the future to display</label>
+				<input type='text' name='events_get_days' id='events_get_days' value='<?php echo esc_attr( get_option('events_get_days') ); ?>' />
+			</div>
+			<div>
+				<label for="fb_get_events">Number of Facebook events to request</label>
+				<input type='text' name='fb_get_events' id='fb_get_events' value='<?php echo esc_attr( get_option('fb_get_events') ); ?>' />
+			</div>
 
 		</div>
 		<?php submit_button( 'Save settings', 'primary', 'save', false ); ?>
