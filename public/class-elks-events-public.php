@@ -177,7 +177,7 @@ class Elks_Events_Public {
 		
 		//Get the generic E2 CSS and JS onboard
 		wp_enqueue_style( $this->plugin_name . '-css' );
-		wp_localize_script( $this->plugin_name . '-js', 'e2js', array( 'uploadsUrl' => wp_upload_dir()['baseurl'], 'pluginUrl' => plugins_url('', __FILE__) ));
+		wp_localize_script( $this->plugin_name . '-js', 'e2js', array( 'uploadsUrl' => set_url_scheme(wp_upload_dir()['baseurl']), 'pluginUrl' => plugins_url('', __FILE__) ));
 
 		// Get the Google Maps script on board
 		wp_enqueue_script( 'google-maps-api' );
