@@ -385,7 +385,7 @@ class Elks_Events_Admin {
 				while ( $the_query->have_posts() ) {
 					$the_query->the_post();
 					$this_id = get_the_ID();
-					if ( get_post_meta($this_id, 'e2_stop_update', true) != true ) {
+					if ( ! get_post_meta($this_id, 'e2_stop_update', true) ) {
 						if ( get_post_meta($this_id, 'e2_fb_updated', true) !=  $e_updated ) {
 							$this_event = array(
 								'ID'			=> $this_id,

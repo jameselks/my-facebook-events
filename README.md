@@ -41,7 +41,7 @@ Two shortcodes:
 
 To stop an imported event updating when it's Facebook source event is updated:
 
-Add a custom field with name `e2_stop_update` and value `true`.
+Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the custom field exists (with any value) the post will not be updated. So if you want the post to be updated again you'll need to delete the custom field from the post.
 
 ## Changelog
 
