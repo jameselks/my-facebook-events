@@ -39,6 +39,10 @@ Two shortcodes:
 
 `[e2_list]` to display a list of events for the next time specified in settings.
 
+To stop an imported event updating when it's Facebook source event is updated:
+
+Add a custom field with name `e2_stop_update` and value `true`.
+
 ## Changelog
 
 = 1.0.0 =

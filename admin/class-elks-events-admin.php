@@ -385,18 +385,19 @@ class Elks_Events_Admin {
 				while ( $the_query->have_posts() ) {
 					$the_query->the_post();
 					$this_id = get_the_ID();
-					if ( get_post_meta($this_id, 'e2_fb_updated', true) !=  $e_updated ) {
-						$this_event = array(
-							'ID'			=> $this_id,
-							'post_type'		=> 'events',
-							'post_title' 	=> wp_strip_all_tags($e_name),
-							'post_content'	=> wp_strip_all_tags($e_description),
-							'post_status'	=> 'publish',			
-						);
-						wp_update_post( $this_event );
-						$do_update_meta = true;
-					};
-
+					if ( get_post_meta($this_id, 'e2_stop_update', true) != true ) {
+						if ( get_post_meta($this_id, 'e2_fb_updated', true) !=  $e_updated ) {
+							$this_event = array(
+								'ID'			=> $this_id,
+								'post_type'		=> 'events',
+								'post_title' 	=> wp_strip_all_tags($e_name),
+								'post_content'	=> wp_strip_all_tags($e_description),
+								'post_status'	=> 'publish',			
+							);
+							wp_update_post( $this_event );
+							$do_update_meta = true;
+						};
+					}
 					$this_img = get_post_meta( $this_id, 'e2_fb_cover', true )[0];
 					$e_cover_basename = reset(explode('?', basename($e_cover)));
 					$this_img_basename = basename($this_img);
