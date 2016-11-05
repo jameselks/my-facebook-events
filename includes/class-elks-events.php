@@ -199,7 +199,7 @@ class Elks_Events {
 
 		//Shortcodes
 		$this->loader->add_shortcode( 'e2_map_today', $plugin_public, 'e2_map_today' );
-		$this->loader->add_shortcode( 'e2_list_30days', $plugin_public, 'e2_list_30days' );
+		$this->loader->add_shortcode( 'e2_list', $plugin_public, 'e2_list' );
 
 	}
 

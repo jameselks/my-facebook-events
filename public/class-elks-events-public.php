@@ -84,7 +84,7 @@ class Elks_Events_Public {
 	 *
 	 * @since    1.1.0
 	 */
-	public function e2_list_30days() {
+	public function e2_list() {
 
 		//Get the generic E2 CSS and JS onboard
 		wp_enqueue_style( 'dashicons' );

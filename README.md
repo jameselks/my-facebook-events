@@ -37,7 +37,7 @@ Two shortcodes:
 
 `[e2_map_today]` to display a map of todays events.
 
-`[e2_list_30days]` to display a list of events for the next 30 days.
+`[e2_list]` to display a list of events for the next time specified in settings.
 
 ## Changelog
 
