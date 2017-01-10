@@ -24,7 +24,7 @@ if (isset($_POST['import'])) {
 
 	<h1>Elks Events Settings</h1>
 	<h2>Settings</h2>
-	<form method='post' action='options.php'>
+	<form method='post' action='options.php' id="e2-settings">
 		<?php settings_fields( 'e2-group' ); ?>
 		<?php do_settings_sections( 'e2-group' ); ?>
 		<div class="form-table">
@@ -38,8 +38,8 @@ if (isset($_POST['import'])) {
 			</div>			
 			<div>
 				<label for="fb_longtoken">Facebook long-lived token</label>
-				<input type='text' name='fb_longtoken' id='fb_longtoken' value='<?php echo esc_attr( get_option('fb_longtoken') ); ?>' />
 				<span>Don't edit this field.</span>
+				<input type='text' name='fb_longtoken' id='fb_longtoken' value='<?php echo esc_attr( get_option('fb_longtoken') ); ?>' />
 			</div>
 			<div>
 				<label for="api_key_gm">Google Maps API Key</label>
@@ -75,7 +75,7 @@ if (isset($_POST['import'])) {
 		</div>
 		<?php submit_button( 'Save settings', 'primary', 'save', false ); ?>
 	</form>
-	<form action="" method="post" id="event_import">
+	<form action="" method="post" id="e2-import">
 		<?php submit_button( 'Import Facebook events now', 'secondary', 'import', false ); ?>
 	</form>
 

@@ -3,12 +3,29 @@
  * included in this file.
  */
 
- #e2 .form-table input {
- 	display:block;
- 	width: 1400px;
- 	max-width: 100%;
- }
+#e2 h2 {
+	font-weight: bold;
+	text-transform: uppercase;
+}
 
- #e2 input.button {
- 	margin-top:1em;
- }
+#e2 .form-table input {
+	display:block;
+	width: 1400px;
+	max-width: 100%;
+}
+
+#e2 input.button {
+	margin-top:1em;
+}
+
+#e2 #e2-settings div {
+	margin: 1em 0;
+}
+
+#e2 #e2-settings div label {
+	font-weight: bold;
+}
+
+#e2 #e2-settings div span {
+	display: block;
+}
