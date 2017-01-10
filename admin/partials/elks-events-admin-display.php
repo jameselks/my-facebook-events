@@ -39,6 +39,7 @@ if (isset($_POST['import'])) {
 			<div>
 				<label for="fb_longtoken">Facebook long-lived token</label>
 				<input type='text' name='fb_longtoken' id='fb_longtoken' value='<?php echo esc_attr( get_option('fb_longtoken') ); ?>' />
+				<span>Don't edit this field.</span>
 			</div>
 			<div>
 				<label for="api_key_gm">Google Maps API Key</label>
@@ -49,11 +50,11 @@ if (isset($_POST['import'])) {
 				<input type='text' name='api_key_gp' id='api_key_gp' value='<?php echo esc_attr( get_option('api_key_gp') ); ?>' />
 			</div>
 			<div>
-				<label for="radius_lat">Google Places search centre - latitude</label>
+				<label for="radius_lat">Google Places search centre &mdash; latitude</label>
 				<input type='text' name='radius_lat' id='radius_lat' value='<?php echo esc_attr( get_option('radius_lat') ); ?>' />
 			</div>
 			<div>
-				<label for="radius_lng">Google Places search centre - longitude</label>
+				<label for="radius_lng">Google Places search centre &mdash; longitude</label>
 				<input type='text' name='radius_lng' id='radius_lng' value='<?php echo esc_attr( get_option('radius_lng') ); ?>' />
 			</div>			
 			<div>
@@ -62,17 +63,19 @@ if (isset($_POST['import'])) {
 			</div>									
 			<div>
 				<label for="events_get_days">Number of days into the future to display</label>
+				<span>Default value. Can be overridden in the shortcode.</span>
 				<input type='text' name='events_get_days' id='events_get_days' value='<?php echo esc_attr( get_option('events_get_days') ); ?>' />
 			</div>
 			<div>
 				<label for="fb_get_events">Number of Facebook events to request</label>
+				<span>More events leads to a slower request time. Less than 200 recommended. Use the <a href="https://developers.facebook.com/tools/explorer/">Facebook Graph API Explorer</a> to check response time.
 				<input type='text' name='fb_get_events' id='fb_get_events' value='<?php echo esc_attr( get_option('fb_get_events') ); ?>' />
 			</div>
 
 		</div>
 		<?php submit_button( 'Save settings', 'primary', 'save', false ); ?>
 	</form>
-	<form action="" method="post">
+	<form action="" method="post" id="event_import">
 		<?php submit_button( 'Import Facebook events now', 'secondary', 'import', false ); ?>
 	</form>
 

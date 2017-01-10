@@ -84,7 +84,11 @@ class Elks_Events_Public {
 	 *
 	 * @since    1.1.0
 	 */
-	public function e2_list() {
+	public function e2_list( $atts ) {
+
+	    $atts = shortcode_atts( array(
+	        'get_days' => get_option('events_get_days')
+	    ), $atts );		
 
 		//Get the generic E2 CSS and JS onboard
 		wp_enqueue_style( 'dashicons' );
@@ -103,7 +107,7 @@ class Elks_Events_Public {
 			'meta_key'			=> 'e2_fb_start_date',
 			'meta_query'		=> array(
 				'key'				=> 'e2_fb_start_date',
-				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+" . intval(get_option('events_get_days')) . " days")) ),
+				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+" . intval($atts['get_days']) . " days")) ),
 				'compare'			=> 'BETWEEN',
 				'type'				=> 'DATE'
 				),
