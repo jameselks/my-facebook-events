@@ -256,7 +256,6 @@ class Elks_Events_Public {
 
 		// The Loop
 		if ( $the_query->have_posts() ) {
-			$output = $output . '<div id="e2-events">';
 			$previous_date = new DateTime( date('Y-m-d', strtotime(current_time('Y-m-d') . "-1 days")) );
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
@@ -266,16 +265,53 @@ class Elks_Events_Public {
 				if ($the_start->format('Y-m-d') != $previous_date->format('Y-m-d')) {
 					$is_first = true;
 					$start_formatted = $the_start->format('Y-m-d');
+					
+					$output = $output . '<div><br><h2 style="font-size:18px !important;line-height:125% !important;">';
 					if ($start_formatted == current_time('Y-m-d')) {
-						$output = $output . '<h2>Today</h2>';
-						$output = $output . '<div id="today-map"><p>Want to know where today\'s exhibitions are?</p><a href="/today/" class="btn btn-secondary">Map of today\'s exhibitions</a></div>';
+						//IF Today
+						$output = $output . 'Today';
 					} elseif ( $start_formatted == date('Y-m-d', strtotime(current_time('Y-m-d') . "+1 days")) ) {
-						$output = $output . '<h2>Tomorrow</h2>';
+						//IF Tomorrow
+						$output = $output . 'Tomorrow';
 					} else {
-						$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
+						//Otherwise...
+						$output = $output . $the_start->format('l j M');
 					}
+					$output = $output . '</h2></div>';
+
 				}
+
 				$previous_date = $the_start;
+				$output = $output . '<div style="margin-top:5px; padding-top:5px; font-size: 14px !important; line-height: 125% !important; color: #404040 !important;">';
+				$output = $output . '	<a class="url" href="https://www.facebook.com/events/319480168399057/" target="_blank" style="word-wrap:break-word;-ms-text-size-adjust: 100%;-webkit-text-size-adjust:100%;color:#be1522;font-weight:bold;text-decoration:none;">' . get_the_title() . '</a>';
+				$output = $output . '	<br><span>'. $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</span>';
+				$output = $output . '</div>';
+
+				/*
+				$output = $output . 	'<table border="0" cellpadding="0" cellspacing="0" class="mcnCaptionRightContentOuter" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><tr><td class="mcnCaptionBlockInner" valign="top" style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+											<table align="left" border="0" cellpadding="0" cellspacing="0" class="mcnCaptionRightImageContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+												<tbody>
+													<tr>
+														<td class="mcnCaptionRightImageContent" valign="top" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+															<img alt="" src="' . get_the_post_thumbnail_url( $the_id, array(400, 200) ) . '" width="132" style="max-width: 720px;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<table class="mcnCaptionRightTextContentContainer" align="right" border="0" cellpadding="0" cellspacing="0" width="396" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+												<tbody>
+													<tr>
+														<td valign="top" class="mcnTextContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
+															<strong><a href="http://strobed.com.au" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #2BAADF;font-weight: normal;text-decoration: underline;">' . get_the_title() . '</a></strong><br>
+															' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td></tr></table>';
+				*/
+
+				/*
 				$output = $output . '<div class="event container-fluid">';
 				$output = $output . '	<div class="row">';
 				$output = $output . '		<div class="col-sm-4 event-image-container">';
@@ -295,13 +331,13 @@ class Elks_Events_Public {
 				$output = $output . '		</div>';
 				$output = $output . '	</div>';
 				$output = $output . '</div>';
+				*/
 			}
-			$output = $output . '</div>';
 			
 			/* Restore original Post Data */
 			wp_reset_postdata();
 		} else {
-			$output = $output . '<p>No posts found.</p>';
+			$output = $output . '<p>Nothing found :(</p>';
 		}
 
 		return $output;
