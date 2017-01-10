@@ -19,7 +19,6 @@ if (isset($_POST['import'])) {
 
 ?>
 
-
 <div id='e2' class='wrap'>
 
 	<h1>Elks Events Settings</h1>
@@ -82,6 +81,5 @@ if (isset($_POST['import'])) {
 	<h2>Facebook Connector</h2>
 	<div id="status"></div>
 	<fb:login-button scope="public_profile,email,user_events" onlogin="checkLoginState();"></fb:login-button>
-
 
 </div>

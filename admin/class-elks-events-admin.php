@@ -339,6 +339,9 @@ class Elks_Events_Admin {
 
 			if ( !empty($e['place']['location']['street']) && !empty($e['place']['location']['city']) ) {
 				$e_location = $e['place']['location']['street'] .', ' . $e['place']['location']['city'];
+				if ( !empty($e['place']['name']) ) {
+					$e_location = $e['place']['name'] . ' &mdash; ' . $e_location;
+				}
 				$do_geocode = false;
 			} elseif ( !empty($e['place']['name']) ) {
 				$e_location = $e['place']['name'];
