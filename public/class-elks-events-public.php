@@ -79,6 +79,8 @@ class Elks_Events_Public {
 
 	}
 
+
+
 	/**
 	 * Shortcode for list of events in next 30 days.
 	 *
@@ -86,9 +88,14 @@ class Elks_Events_Public {
 	 */
 	public function e2_list( $atts ) {
 
-	    $atts = shortcode_atts( array(
-	        'get_days' => get_option('events_get_days')
-	    ), $atts );		
+		//Sort out values that have been passed in
+		$atts = shortcode_atts( array(
+			'get_days' => intval(get_option('events_get_days')),
+			), $atts );
+		$atts['get_days'] = $atts['get_days'] - 1;
+		if ( $atts['get_days'] < 0 ) {
+			$atts['get_days'] = intval(get_option('events_get_days'));
+		}
 
 		//Get the generic E2 CSS and JS onboard
 		wp_enqueue_style( 'dashicons' );
@@ -210,6 +217,95 @@ class Elks_Events_Public {
 				'supports' 	=> array( 'title', 'editor', 'author', 'thumbnail', 'custom-fields' ),
 				)
 			);
+	}
+
+	/**
+	 * Shortcode for list of events to be output specifically for the MailChimp RSS email feed.
+	 * This REALLY needs to be extracted and put somewhere else at some point, like some kind of 'custom' output.
+	 *
+	 * @since    1.1.0
+	 */
+	public function e2_list_email( $atts ) {
+
+		//Sort out values that have been passed in
+		$atts = shortcode_atts( array(
+			'get_days' => intval(get_option('events_get_days')),
+			), $atts );
+		$atts['get_days'] = $atts['get_days'] - 1;
+		if ( $atts['get_days'] < 0 ) {
+			$atts['get_days'] = intval(get_option('events_get_days'));
+		}
+
+		$output = "";
+
+		// The Query
+		$args = array (
+			'post_type' 		=> 'events',
+			'posts_per_page'	=> -1,
+			'orderby'			=> 'e2_fb_start_date',
+			'order'				=> 'ASC',
+			'meta_key'			=> 'e2_fb_start_date',
+			'meta_query'		=> array(
+				'key'				=> 'e2_fb_start_date',
+				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+" . intval($atts['get_days']) . " days")) ),
+				'compare'			=> 'BETWEEN',
+				'type'				=> 'DATE'
+				),
+			);
+		$the_query = new WP_Query( $args );
+
+		// The Loop
+		if ( $the_query->have_posts() ) {
+			$output = $output . '<div id="e2-events">';
+			$previous_date = new DateTime( date('Y-m-d', strtotime(current_time('Y-m-d') . "-1 days")) );
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$the_id = get_the_id();
+				$the_start = new DateTime(get_post_meta( $the_id, 'e2_fb_start', true ));
+				$is_first = false;
+				if ($the_start->format('Y-m-d') != $previous_date->format('Y-m-d')) {
+					$is_first = true;
+					$start_formatted = $the_start->format('Y-m-d');
+					if ($start_formatted == current_time('Y-m-d')) {
+						$output = $output . '<h2>Today</h2>';
+						$output = $output . '<div id="today-map"><p>Want to know where today\'s exhibitions are?</p><a href="/today/" class="btn btn-secondary">Map of today\'s exhibitions</a></div>';
+					} elseif ( $start_formatted == date('Y-m-d', strtotime(current_time('Y-m-d') . "+1 days")) ) {
+						$output = $output . '<h2>Tomorrow</h2>';
+					} else {
+						$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
+					}
+				}
+				$previous_date = $the_start;
+				$output = $output . '<div class="event container-fluid">';
+				$output = $output . '	<div class="row">';
+				$output = $output . '		<div class="col-sm-4 event-image-container">';
+				$output = $output . 			get_the_post_thumbnail( $the_id, array(400, 200) );
+				$output = $output . '		</div>';
+				$output = $output . '		<div class="col-sm-8 event-details">';				
+				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
+				$output = $output . '			<p class="event_start">' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
+				$output = $output . '			<div class="event-more accordion">';
+
+				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
+				$output = $output . '				<div class="event-description accordion-content" style="display:none;">';
+				$output = $output . '					<p class="event-description">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
+				$output = $output . '					<p class="event-link"><a href="https://www.facebook.com/events/' . get_post_meta( $the_id, 'e2_fb_id', true ) . '" target="_blank">View on Facebook</a></p>';
+				$output = $output . '				</div>';
+				$output = $output . '			</div>';				
+				$output = $output . '		</div>';
+				$output = $output . '	</div>';
+				$output = $output . '</div>';
+			}
+			$output = $output . '</div>';
+			
+			/* Restore original Post Data */
+			wp_reset_postdata();
+		} else {
+			$output = $output . '<p>No posts found.</p>';
+		}
+
+		return $output;
+
 	}
 
 }

@@ -37,8 +37,7 @@ Two shortcodes:
 
 `[e2_map_today]` to display a map of todays events.
 
-`[e2_list]` to display a list of events for the next time specified in settings. To limit the number of days to fetch events for, use `get_days` variable. For example `[e2_list get_days="7"]` would get todays events and then the next 7 days of events. `[e2_list get_days="0"]` would show only events on today.
-
+`[e2_list]` to display a list of events for the next time specified in settings. To limit the number of days to fetch events for, use `get_days` variable. For example `[e2_list get_days="7"]` would get todays events and then the next 6 days of events. `[e2_list get_days="1"]` would show only events on today.
 
 To stop an imported event updating when it's Facebook source event is updated:
 
