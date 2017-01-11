@@ -169,8 +169,17 @@ class Elks_Events_Admin {
 		$_SESSION['fb_access_token'] = (string) $accessToken;
 
 		// User is logged in!
-
 	    wp_die();
+	}
+
+	public function e2_fb_tokenexpiry() {
+	/*█████████████████████████████████████████████████████
+	 * Alert the user when a Facebook token is about to expire.
+	 *
+	 * @since    1.0.0
+	 */	
+
+
 	}
 
 	public function e2_geocode_place($place, $radius, $radius_center, $api_key) {
@@ -214,16 +223,18 @@ class Elks_Events_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-		//echo 'Downloading image from Facebook<br />';
-		//flush();
 
 		include_once(ABSPATH . "wp-includes/pluggable.php");
 		include_once(ABSPATH . "wp-admin/includes/media.php");
 		include_once(ABSPATH . "wp-admin/includes/file.php");
 		include_once(ABSPATH . "wp-admin/includes/image.php");
 
+		//Download the image from the specified URL and attach it to the post
 		$media = media_sideload_image($cover_url, $post_id);
-		if(!empty($media) && !is_wp_error($media)){
+		
+		//If successful, attach it as the cover image
+		if ( !empty($media) && !is_wp_error($media) ){
+			
 			$args = array(
 				'post_type' => 'attachment',
 				'posts_per_page' => -1,
@@ -231,18 +242,23 @@ class Elks_Events_Admin {
 				'post_parent' => $post_id
 				);
 			$attachments = get_posts($args);
-			if(isset($attachments) && is_array($attachments)) {
+			
+			if ( isset($attachments) && is_array($attachments) ) {
 
 				foreach($attachments as $attachment){
-					$cover_url = wp_get_attachment_image_src($attachment->ID, 'full');
 
-					if(strpos($media, $cover_url[0]) !== false){
+					$cover_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
+
+					if ( strpos($media, $cover_url[0]) !== false ) {
 						set_post_thumbnail($post_id, $attachment->ID);
 						break;
 					}
+
 				}
 			}
+
 		}
+
 		update_post_meta($post_id, 'e2_fb_cover', $cover_url);
 	}
 
@@ -268,7 +284,7 @@ class Elks_Events_Admin {
 			'default_access_token' => get_option('fb_longtoken'),
 		]);
 
-		// Create the Facebook Graph request (but don't execute - that's below).
+		// Create the Facebook Graph request (but don't execute - that happens later).
 		$request = $fb->request(
 		  'GET',
 		  '/me/events',
@@ -279,8 +295,8 @@ class Elks_Events_Admin {
 		  )
 		);
 
-		// Set the max script timeout to 30s from now
-		set_time_limit(30);
+		// Set the max script timeout to 20s from now
+		set_time_limit(20);
 
 		// Send the request to Graph.
 		try {
@@ -306,6 +322,7 @@ class Elks_Events_Admin {
 		$today = new DateTime(current_time('Y-m-d'));
 		$before_today = false;
 
+		//Cycle through each event
 		foreach ($events as $index => $e) {
 
 			if ($echo_results) {
@@ -380,15 +397,19 @@ class Elks_Events_Admin {
 				);
 			$the_query = new WP_Query( $args );
 
-			// The Loop
+			// The Loop - HAVE POSTS
 			if ( $the_query->have_posts() ) {
 				
 				$do_update_meta = false;
 
 				while ( $the_query->have_posts() ) {
+					
 					$the_query->the_post();
 					$this_id = get_the_ID();
+					
+					//Don't update if 'stop_update' custom field is true
 					if ( ! get_post_meta($this_id, 'e2_stop_update', true) ) {
+					
 						if ( get_post_meta($this_id, 'e2_fb_updated', true) !=  $e_updated ) {
 							$this_event = array(
 								'ID'			=> $this_id,
@@ -400,12 +421,16 @@ class Elks_Events_Admin {
 							wp_update_post( $this_event );
 							$do_update_meta = true;
 						};
-					}
-					$this_img = get_post_meta( $this_id, 'e2_fb_cover', true )[0];
-					$e_cover_basename = reset(explode('?', basename($e_cover)));
-					$this_img_basename = basename($this_img);
-					if ($e_cover_basename != $this_img_basename && !empty($e_cover)) {
-						apply_filters('e2_insert_image', $this_id, $e_cover);
+					
+						$this_img = get_post_meta( $this_id, 'e2_fb_cover', true )[0];
+						$e_cover_basename = reset(explode('?', basename($e_cover)));
+						$this_img_basename = basename($this_img);				
+						$e_cover_basename_noext = pathinfo($e_cover_basename, PATHINFO_FILENAME);
+						
+						if ( (strpos($this_img_basename, $e_cover_basename_noext) === false)  && !empty($e_cover)) {
+							apply_filters('e2_insert_image', $this_id, $e_cover);
+						}
+
 					}
 
 				}
