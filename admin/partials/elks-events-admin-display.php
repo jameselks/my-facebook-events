@@ -21,7 +21,7 @@ if (isset($_POST['import'])) {
 
 <div id='e2' class='wrap'>
 
-	<h1>Elks Events Settings</h1>
+	<h1>Facebook Events &mdash; Settings</h1>
 	<h2>Settings</h2>
 	<form method='post' action='options.php' id="e2-settings">
 		<?php settings_fields( 'e2-group' ); ?>
@@ -67,7 +67,7 @@ if (isset($_POST['import'])) {
 			</div>
 			<div>
 				<label for="fb_get_events">Number of Facebook events to request</label>
-				<span>More events leads to a slower request time. Less than 200 recommended. Use the <a href="https://developers.facebook.com/tools/explorer/">Facebook Graph API Explorer</a> to check response time.
+				<span>More events leads to a slower request time. Less than 200 recommended. Use the <a href="https://developers.facebook.com/tools/explorer/">Facebook Graph API Explorer</a> to check request time.
 				<input type='text' name='fb_get_events' id='fb_get_events' value='<?php echo esc_attr( get_option('fb_get_events') ); ?>' />
 			</div>
 
