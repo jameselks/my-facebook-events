@@ -61,7 +61,7 @@ class Elks_Events_Admin {
 	 * @since    1.0.0
 	 */
 
-	add_menu_page('Elks Events &mdash; Settings', 'Elks Events', 'manage_options', $this->plugin_name, array($this, 'e2_admin_page'), 'dashicons-admin-generic');
+	add_menu_page('Facebook Events &mdash; Settings', 'Facebook Events', 'manage_options', $this->plugin_name, array($this, 'e2_admin_page'), 'dashicons-admin-generic');
 
 	}
 
@@ -111,6 +111,33 @@ class Elks_Events_Admin {
 	 */
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/elks-events-admin.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( $this->plugin_name, 'e2js', array( 'fbAppId' => get_option('fb_app_id') ) );
+	}
+
+	public function e2_post_columns() {
+	/*█████████████████████████████████████████████████████
+	 * Create custom columns in the 'events' editor.
+	 *
+	 * @since    1.1.0
+	 */
+		$columns[ 'e2_event_start' ] = 'Start time';
+		$columns[ 'e2_location' ] = 'Location';
+		return $columns;
+	}
+
+	public function e2_post_custom_columns() {
+	/*█████████████████████████████████████████████████████
+	 * Fill custom columns in the 'events' editor with data.
+	 *
+	 * @since    1.1.0
+	 */
+		switch( $column_name ) {
+			case 'e2_event_start':
+				echo '<div id="e2-event-start-' . $post_id . '">' . get_post_meta( $post_id, 'e2_fb_event_start', true ) . '</div>';
+				break;
+			case 'e2_location':
+				echo '<div id="e2-location-' . $post_id . '">' . get_post_meta( $post_id, 'e2_fb_location', true ) . '</div>';
+				break;
+		}
 	}
 
 	public function e2_process_events($echo_results) {
