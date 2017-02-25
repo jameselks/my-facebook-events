@@ -107,8 +107,7 @@ class Elks_Events_Public {
 		$args = array (
 			'post_type' 		=> 'e2_events',
 			'posts_per_page'	=> -1,
-			'orderby'			=> 'e2_fb_start_date',
-			'order'				=> 'ASC',
+			'orderby' 			=> array( 'meta_value' => ASC ),
 			'meta_key'			=> 'e2_fb_start_date',
 			'meta_query'		=> array(
 				'key'				=> 'e2_fb_start_date',
@@ -140,6 +139,11 @@ class Elks_Events_Public {
 						$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
 					}
 				}
+				$e2_fb_id = get_post_meta( $the_id, 'e2_fb_id', true );
+				$e2_source_url = get_post_meta( $the_id, 'e2_source_url', true );
+				if ($e2_fb_id) {
+					$e2_source_url = 'https://www.facebook.com/events/' . $e2_fb_id;
+				}
 				$previous_date = $the_start;
 				if ($is_first) {
 					$output = $output . '<div class="event container-fluid first">';
@@ -154,11 +158,14 @@ class Elks_Events_Public {
 				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
 				$output = $output . '			<p class="event_start">' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
 				$output = $output . '			<div class="event-more accordion">';
-
 				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
 				$output = $output . '				<div class="event-description accordion-content" style="display:none;">';
 				$output = $output . '					<p class="event-description">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
-				$output = $output . '					<p class="event-link"><a href="https://www.facebook.com/events/' . get_post_meta( $the_id, 'e2_fb_id', true ) . '" target="_blank">View on Facebook</a></p>';
+				if ($e2_source_url) {
+					$output = $output . '				<p class="event-link">';
+					$output = $output . '					<a href="' . $e2_source_url . '" target="_blank">Source</a>';
+					$output = $output . '				</p>';
+				}
 				$output = $output . '				</div>';
 				$output = $output . '			</div>';				
 				$output = $output . '		</div>';
