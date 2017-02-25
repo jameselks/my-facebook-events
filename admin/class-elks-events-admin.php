@@ -546,10 +546,15 @@ class Elks_Events_Admin {
 				$the_query->the_post();
 				$this_id = get_the_ID();
 				$e_start_datetime = new DateTime(get_post_meta($this_id, 'e2_fb_start', true));
+				$e2_fb_id = get_post_meta( $this_id, 'e2_fb_id', true );
+				$e2_source_url = get_post_meta( $this_id, 'e2_source_url', true );
+				if ($e2_fb_id) {
+					$e2_source_url = 'https://www.facebook.com/events/' . $e2_fb_id;
+				}
 				$events_today[] = array(
 					'title'		=> get_the_title(),
 					'start'		=> $e_start_datetime->format('g:ia'),
-					'url'		=> 'http://facebook.com/events/' . get_post_meta($this_id, 'e2_fb_id', true),
+					'url'		=> $e2_source_url,
 					'location'	=> get_post_meta($this_id, 'e2_fb_location', true),
 					'lat' 		=> get_post_meta($this_id, 'e2_fb_lat', true),
 					'lng' 		=> get_post_meta($this_id, 'e2_fb_lng', true),
