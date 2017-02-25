@@ -79,8 +79,6 @@ class Elks_Events_Public {
 
 	}
 
-
-
 	/**
 	 * Shortcode for list of events in next 30 days.
 	 *
@@ -107,7 +105,7 @@ class Elks_Events_Public {
 
 		// The Query
 		$args = array (
-			'post_type' 		=> 'events',
+			'post_type' 		=> 'e2_events',
 			'posts_per_page'	=> -1,
 			'orderby'			=> 'e2_fb_start_date',
 			'order'				=> 'ASC',
@@ -206,7 +204,7 @@ class Elks_Events_Public {
 	 */
 	public function e2_create_post_type() {
 		register_post_type( 
-			'events',
+			'e2_events',
 			array(
 				'labels' => array(
 					'name' 			=> __( 'Events' ),
@@ -240,7 +238,7 @@ class Elks_Events_Public {
 
 		// The Query
 		$args = array (
-			'post_type' 		=> 'events',
+			'post_type' 		=> 'e2_events',
 			'posts_per_page'	=> -1,
 			'orderby'			=> 'e2_fb_start_date',
 			'order'				=> 'ASC',

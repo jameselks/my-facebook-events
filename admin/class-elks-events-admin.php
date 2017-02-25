@@ -113,30 +113,37 @@ class Elks_Events_Admin {
 		wp_localize_script( $this->plugin_name, 'e2js', array( 'fbAppId' => get_option('fb_app_id') ) );
 	}
 
-	public function e2_post_columns() {
+	public function e2_set_custom_columns( $columns, $post_type ) {
 	/*█████████████████████████████████████████████████████
 	 * Create custom columns in the 'events' editor.
 	 *
 	 * @since    1.1.0
-	 */
-		$columns[ 'e2_event_start' ] = 'Start time';
-		$columns[ 'e2_location' ] = 'Location';
+	 */ 
+		switch ($post_type) {
+			case 'e2_events':
+			unset($columns['author']);
+			$columns['e2_event_start'] = __( 'Start', 'elks-events' );
+			$columns['e2_event_location'] = __( 'Location', 'elks-events' );
+			break;
+		}
 		return $columns;
 	}
 
-	public function e2_post_custom_columns() {
+	public function e2_custom_columns_data( $column, $post_id ) {
 	/*█████████████████████████████████████████████████████
 	 * Fill custom columns in the 'events' editor with data.
 	 *
 	 * @since    1.1.0
 	 */
-		switch( $column_name ) {
-			case 'e2_event_start':
-				echo '<div id="e2-event-start-' . $post_id . '">' . get_post_meta( $post_id, 'e2_fb_event_start', true ) . '</div>';
-				break;
-			case 'e2_location':
-				echo '<div id="e2-location-' . $post_id . '">' . get_post_meta( $post_id, 'e2_fb_location', true ) . '</div>';
-				break;
+		switch ( $column ) {
+
+			case 'e2_event_start' :
+			echo get_post_meta( $post_id , 'e2_fb_event_start' , true ); 
+			break;
+
+			case 'e2_event_location' :
+			echo get_post_meta( $post_id , 'e2_fb_location' , true ); 
+			break;
 		}
 	}
 
@@ -414,7 +421,7 @@ class Elks_Events_Admin {
 
 			// The Query
 			$args = array (
-				'post_type' => 'events',
+				'post_type' => 'e2_events',
 				'posts_per_page' => -1,
 				'meta_key' => 'e2_fb_id',
 				'meta_query' => array(
@@ -440,7 +447,7 @@ class Elks_Events_Admin {
 						if ( get_post_meta($this_id, 'e2_fb_updated', true) !=  $e_updated ) {
 							$this_event = array(
 								'ID'			=> $this_id,
-								'post_type'		=> 'events',
+								'post_type'		=> 'e2_events',
 								'post_title' 	=> wp_strip_all_tags($e_name),
 								'post_content'	=> wp_strip_all_tags($e_description),
 								'post_status'	=> 'publish',			
@@ -465,7 +472,7 @@ class Elks_Events_Admin {
 			} else {
 
 				$this_event = array(
-					'post_type' 	=> 'events',
+					'post_type' 	=> 'e2_events',
 					'post_name'		=> $e_id,
 					'post_title' 	=> wp_strip_all_tags($e_name),
 					'post_content' 	=> wp_strip_all_tags($e_description),
@@ -525,7 +532,7 @@ class Elks_Events_Admin {
 	 * @since    1.0.0
 	 */
 		$args = array (
-			'post_type' => 'events',
+			'post_type' => 'e2_events',
 			'posts_per_page' => -1,
 			'meta_key' => 'e2_fb_start_date',
 			'meta_query' => array(

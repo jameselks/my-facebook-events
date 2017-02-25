@@ -13,7 +13,7 @@
  * @package           Elks_Events
  *
  * @wordpress-plugin
- * Plugin Name:       Elks Events
+ * Plugin Name:       My Facebook events
  * Plugin URI:        http://jameselks.com/elks-events
  * Description:       Personal event manager for Facebook events in Wordpress.
  * Version:           1.0.0
@@ -23,7 +23,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       elks-events
  * Domain Path:       /languages
- * GitHub Plugin URI: https://github.com/jameselks/elks-events
+ * GitHub Plugin URI: https://github.com/jameselks/my-facebook-events
  * GitHub Branch:     master 
  */
 

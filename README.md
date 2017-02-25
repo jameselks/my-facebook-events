@@ -25,7 +25,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Installation
 
-1. Download the [master branch (.zip)](https://github.com/jameselks/elks-events/archive/master.zip) from GitHub.
+1. Download the [master branch (.zip)](https://github.com/jameselks/my-facebook-events/archive/master.zip) from GitHub.
 1. Upload `elks-events` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
