@@ -284,52 +284,6 @@ class Elks_Events_Public {
 				$output = $output . '	<a class="url" href="https://www.facebook.com/events/319480168399057/" target="_blank" style="word-wrap:break-word;-ms-text-size-adjust: 100%;-webkit-text-size-adjust:100%;color:#be1522;font-weight:bold;text-decoration:none;">' . get_the_title() . '</a>';
 				$output = $output . '	<br><span>'. $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</span>';
 				$output = $output . '</div>';
-
-				/*
-				$output = $output . 	'<table border="0" cellpadding="0" cellspacing="0" class="mcnCaptionRightContentOuter" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><tr><td class="mcnCaptionBlockInner" valign="top" style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-											<table align="left" border="0" cellpadding="0" cellspacing="0" class="mcnCaptionRightImageContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-												<tbody>
-													<tr>
-														<td class="mcnCaptionRightImageContent" valign="top" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-															<img alt="" src="' . get_the_post_thumbnail_url( $the_id, array(400, 200) ) . '" width="132" style="max-width: 720px;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
-														</td>
-													</tr>
-												</tbody>
-											</table>
-											<table class="mcnCaptionRightTextContentContainer" align="right" border="0" cellpadding="0" cellspacing="0" width="396" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-												<tbody>
-													<tr>
-														<td valign="top" class="mcnTextContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
-															<strong><a href="http://strobed.com.au" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #2BAADF;font-weight: normal;text-decoration: underline;">' . get_the_title() . '</a></strong><br>
-															' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</td></tr></table>';
-				*/
-
-				/*
-				$output = $output . '<div class="event container-fluid">';
-				$output = $output . '	<div class="row">';
-				$output = $output . '		<div class="col-sm-4 event-image-container">';
-				$output = $output . 			get_the_post_thumbnail( $the_id, array(400, 200) );
-				$output = $output . '		</div>';
-				$output = $output . '		<div class="col-sm-8 event-details">';				
-				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
-				$output = $output . '			<p class="event_start">' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
-				$output = $output . '			<div class="event-more accordion">';
-
-				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
-				$output = $output . '				<div class="event-description accordion-content" style="display:none;">';
-				$output = $output . '					<p class="event-description">' . str_replace(PHP_EOL, '<br />', get_the_content()) . '</p>';
-				$output = $output . '					<p class="event-link"><a href="https://www.facebook.com/events/' . get_post_meta( $the_id, 'e2_fb_id', true ) . '" target="_blank">View on Facebook</a></p>';
-				$output = $output . '				</div>';
-				$output = $output . '			</div>';				
-				$output = $output . '		</div>';
-				$output = $output . '	</div>';
-				$output = $output . '</div>';
-				*/
 			}
 			
 			/* Restore original Post Data */
