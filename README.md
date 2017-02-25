@@ -1,8 +1,10 @@
-# Elks Events
-Event manager for Facebook events in Wordpress.
+# My Facebook Events
+Import Facebook events from an individual Facebook account to Wordpress posts. Then display them in a list or a map. This is still very early and should be considered a work in progress.
 
 Allows you to:
 - Download events that you've RSVP'd to from Facebook (including image)
+- Automatically update if the Facebook event changes
+- Add your own events
 - Geocode events without a location
 - Display todays events on a map using a shortcode
 - Display a list of events using a shortcode
@@ -23,7 +25,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Installation
 
-1. Download the [master branch (.zip)](https://github.com/jameselks/elks-events/archive/master.zip) from GitHub.
+1. Download the [master branch (.zip)](https://github.com/jameselks/my-facebook-events/archive/master.zip) from GitHub.
 1. Upload `elks-events` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
@@ -44,6 +46,10 @@ To stop an imported event updating when it's Facebook source event is updated:
 Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the custom field exists (with any value) the post will not be updated. So if you want the post to be updated again you'll need to delete the custom field from the post.
 
 ## Changelog
+
+= 1.1.0 =
+* Renamed to 'My Facebook Events'
+* Simplified adding a new custom event (not imported)
 
 = 1.0.0 =
 * Initial release. Functional.
