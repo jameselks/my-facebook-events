@@ -240,11 +240,10 @@ class Elks_Events_Admin {
 		if (($lat === NULL) or ($lng === NULL)) {
 			$results = NULL;
 		} else {
-			$latlng = array(
+			$results = array(
 				'lat' => $lat,
-				'lng' => $lng
+				'lng' => $lng,
 				);
-			$results = $latlng;
 		}
 
 		return $results;
@@ -323,7 +322,7 @@ class Elks_Events_Admin {
 		  'GET',
 		  '/me/events',
 		  array(
-		    'fields' => 'id,name,description,cover,start_time,end_time,owner,place,updated_time',
+		    'fields' => 'id,name,description,cover,start_time,place,updated_time',
 		    'type' => 'attending',
 		    'limit' => get_option('fb_get_events')
 		  )
@@ -379,43 +378,37 @@ class Elks_Events_Admin {
 				$before_today = true;
 				$log = $log . 'Processed ' . (intval($index) + 1) . ' of ' . (intval($totalEvents)) . ' events.' . PHP_EOL;
 			}
-			$e_start_datetime = $e_start_datetime->format('Y-m-d');
-
-			if (is_a($e['end_time'], 'DateTime')) { 
-				$e_end_time = $e['end_time']->format('Y-m-d g:ia'); 
-			}
-
-			$e_owner_id = $e['owner']['id'];
-			$e_owner_name = $e['owner']['name'];
-
-			if ( !empty($e['place']['location']['street']) && !empty($e['place']['location']['city']) ) {
-				$e_location = $e['place']['location']['street'] .', ' . $e['place']['location']['city'];
-				if ( !empty($e['place']['name']) ) {
-					$e_location = $e['place']['name'] . ' &mdash; ' . $e_location;
-				}
-				$do_geocode = false;
-			} elseif ( !empty($e['place']['name']) ) {
-				$e_location = $e['place']['name'];
-				$do_geocode = true;
-			} else {
-				$e_location = 'No location';
-				$do_geocode = false;
-			}
-			$e_latitude = $e['place']['location']['latitude'];
-			$e_longitude = $e['place']['location']['longitude'];
-			$e_timezone = $e['timezone'];
 			$e_updated = $e['updated_time']->format('Y-m-d g:ia');
 
+			//Location name
+			if ( !empty($e['place']['name']) ) {
+					$e_location_name = $e['place']['name'];
+			}
+
+			//Location address
+			if ( !empty($e['place']['location']['street']) && !empty($e['place']['location']['city']) ) {
+				$e_location_address = $e['place']['location']['street'] .', ' . $e['place']['location']['city'];
+			}
+
+			$e_location = $e_location_name . ' &mdash; ' . $e_location_address;
+
+			//Latitude and longitude
+			$e_latitude = $e['place']['location']['latitude'];
+			$e_longitude = $e['place']['location']['longitude'];
+
 			// Try and geocode if there is a location name, but no lat/lng
-			if ($do_geocode && empty($e_latitude) ) {
-					$log = $log . 'Attempting geocode for: ' . $e_location . PHP_EOL;
-					$geocode = apply_filters('e2_geocode_place', $e_location, get_option('radius'), array('lat'=>get_option('radius_lat'),'lng'=>get_option('radius_lng')), get_option('api_key_gp'));
+			if (!empty($e_location_name) && empty($e_latitude) && empty($e_longitude)) {
+					$log = $log . 'Attempting geocode for address: ' . $e_location_name . PHP_EOL;
+					$log = $log . 'Facebook event ID: ' . $e_id . PHP_EOL;
+					$geocode = apply_filters('e2_geocode_place', $e_location_name, get_option('radius'), array('lat'=>get_option('radius_lat'),'lng'=>get_option('radius_lng')), get_option('api_key_gp'));
 					if (!empty($geocode)) {
-						$log = $log . 'Geocode successful: ' . $geocode['lat'] . ',' . $geocode['lng'] . PHP_EOL;
+						$log = $log . 'Geocode successful: ' . $geocode['lat'] . ', ' . $geocode['lng'] . PHP_EOL;
 						$e_latitude = $geocode['lat'];
 						$e_longitude = $geocode['lng'];
+						$e_location = $e_location_name;
 					} else {
 						$log = $log . 'Geocode unsuccessful.' . PHP_EOL;
+						$e_location = '';
 					};
 			};
 
@@ -488,19 +481,14 @@ class Elks_Events_Admin {
 			} //END - HAVE POSTS
 
 			//Update the post metadata.
-			if (do_update_meta) {
-
+			if ($do_update_meta) {
+				update_post_meta($this_id, 'e2_source_url', 'https://www.facebook.com/events/' . $e_id);
+				update_post_meta($this_id, 'e2_start', $e_start_datetime->format('Y-m-d g:ia'));
+				update_post_meta($this_id, 'e2_location', $e_location);
+				update_post_meta($this_id, 'e2_lat', $e_latitude);
+				update_post_meta($this_id, 'e2_lng', $e_longitude);
 				update_post_meta($this_id, 'e2_fb_id', $e_id);
-				update_post_meta($this_id, 'e2_fb_start', $e_start);
-				update_post_meta($this_id, 'e2_fb_start_date', $e_start_datetime);
-				update_post_meta($this_id, 'e2_fb_end', $e_end_time);
-				update_post_meta($this_id, 'e2_fb_location', $e_location);
-				update_post_meta($this_id, 'e2_fb_lat', $e_latitude);
-				update_post_meta($this_id, 'e2_fb_lng', $e_longitude);
-				update_post_meta($this_id, 'e2_fb_owner_id', $e_owner_id);
-				update_post_meta($this_id, 'e2_fb_owner_name', $e_owner_name);
 				update_post_meta($this_id, 'e2_fb_updated', $e_updated);
-				update_post_meta($this_id, 'e2_fb_timezone', $e_timezone);
 			}
 
 			if ($echo_results) {
@@ -532,39 +520,42 @@ class Elks_Events_Admin {
 	 * @since    1.0.0
 	 */
 		$args = array (
-			'post_type' => 'e2_events',
-			'posts_per_page' => -1,
-			'meta_key' => 'e2_fb_start_date',
-			'meta_query' => array(
-				'key'		=> 'e2_fb_start_date',
-				'value'		=> current_time('Y-m-d')
+			'post_type' 		=> 'e2_events',
+			'posts_per_page' 	=> -1,
+			'orderby' 			=> 'meta_value',
+			'meta_key' 			=> 'e2_start',
+			'meta_query' 		=> array(
+				'key'				=> 'e2_start',
+				'value'				=> current_time('Y-m-d'),
+				'type'				=> 'DATE'
 				),			
 		);
+
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 				$this_id = get_the_ID();
-				$e_start_datetime = new DateTime(get_post_meta($this_id, 'e2_fb_start', true));
-				$e2_fb_id = get_post_meta( $this_id, 'e2_fb_id', true );
-				$e2_source_url = get_post_meta( $this_id, 'e2_source_url', true );
-				if ($e2_fb_id) {
-					$e2_source_url = 'https://www.facebook.com/events/' . $e2_fb_id;
-				}
+				$e_start_datetime = new DateTime(get_post_meta($this_id, 'e2_start', true));
+
 				$events_today[] = array(
 					'title'		=> get_the_title(),
 					'start'		=> $e_start_datetime->format('g:ia'),
-					'url'		=> $e2_source_url,
-					'location'	=> get_post_meta($this_id, 'e2_fb_location', true),
-					'lat' 		=> get_post_meta($this_id, 'e2_fb_lat', true),
-					'lng' 		=> get_post_meta($this_id, 'e2_fb_lng', true),
+					'url'		=> get_post_meta($this_id, 'e2_source_url', true),
+					'location'	=> get_post_meta($this_id, 'e2_location', true),
+					'lat' 		=> get_post_meta($this_id, 'e2_lat', true),
+					'lng' 		=> get_post_meta($this_id, 'e2_lng', true),
 					'cover'		=> wp_get_attachment_url( get_post_thumbnail_id($this_id) )
 				);				
 			}
 		}
 
 		// Write array of todays events to JSON file in uploads folder
-		$response = $events_today;
+		if (empty($events_today)) {
+			$response = "";
+		} else {
+			$response = $events_today;	
+		}
 		if (!file_exists(ABSPATH . 'wp-content/uploads')) {
 		    wp_mkdir_p(ABSPATH . 'wp-content/uploads');
 		}

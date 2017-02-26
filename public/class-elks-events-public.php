@@ -107,17 +107,18 @@ class Elks_Events_Public {
 		$args = array (
 			'post_type' 		=> 'e2_events',
 			'posts_per_page'	=> -1,
-			'orderby' 			=> array( 'meta_value' => ASC ),
-			'meta_key'			=> 'e2_fb_start_date',
+			'orderby' 			=> 'meta_value',
+			'order' 			=> 'ASC',
+			'meta_key'			=> 'e2_start',
 			'meta_query'		=> array(
-				'key'				=> 'e2_fb_start_date',
-				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+" . intval($atts['get_days']) . " days")) ),
-				'compare'			=> 'BETWEEN',
-				'type'				=> 'DATE'
-				),
-			);
+					'key'				=> 'e2_start',
+					'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . '+' . intval($atts['get_days']) . ' days')) ),
+					'compare'			=> 'BETWEEN',
+					'type'				=> 'DATETIME'
+			)
+		);
 		$the_query = new WP_Query( $args );
-
+		
 		// The Loop
 		if ( $the_query->have_posts() ) {
 			$output = $output . '<div id="e2-events">';
@@ -125,7 +126,7 @@ class Elks_Events_Public {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 				$the_id = get_the_id();
-				$the_start = new DateTime(get_post_meta( $the_id, 'e2_fb_start', true ));
+				$the_start = new DateTime(get_post_meta( $the_id, 'e2_start', true ));
 				$is_first = false;
 				if ($the_start->format('Y-m-d') != $previous_date->format('Y-m-d')) {
 					$is_first = true;
@@ -139,10 +140,10 @@ class Elks_Events_Public {
 						$output = $output . '<h2>' . $the_start->format('l j M') . '</h2>';
 					}
 				}
-				$e2_fb_id = get_post_meta( $the_id, 'e2_fb_id', true );
 				$e2_source_url = get_post_meta( $the_id, 'e2_source_url', true );
-				if ($e2_fb_id) {
-					$e2_source_url = 'https://www.facebook.com/events/' . $e2_fb_id;
+				$e2_location = get_post_meta( $the_id, 'e2_location', true );
+				if (!empty($e2_location)) {
+					$e2_location = ' | ' . $e2_location;
 				}
 				$previous_date = $the_start;
 				if ($is_first) {
@@ -156,7 +157,7 @@ class Elks_Events_Public {
 				$output = $output . '		</div>';
 				$output = $output . '		<div class="col-sm-8 event-details">';				
 				$output = $output . '			<h3 class="event-name">' . get_the_title() . '</h3>';
-				$output = $output . '			<p class="event_start">' . $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</p>';
+				$output = $output . '			<p class="event_start">' . $the_start->format('g:ia') . $e2_location . '</p>';
 				$output = $output . '			<div class="event-more accordion">';
 				$output = $output . '				<h4 class="accordion-toggle accordion-closed">More details</h4>';
 				$output = $output . '				<div class="event-description accordion-content" style="display:none;">';
@@ -247,16 +248,16 @@ class Elks_Events_Public {
 		$args = array (
 			'post_type' 		=> 'e2_events',
 			'posts_per_page'	=> -1,
-			'orderby'			=> 'e2_fb_start_date',
-			'order'				=> 'ASC',
-			'meta_key'			=> 'e2_fb_start_date',
+			'orderby' 			=> 'meta_value',
+			'order' 			=> 'ASC',
+			'meta_key'			=> 'e2_start',
 			'meta_query'		=> array(
-				'key'				=> 'e2_fb_start_date',
-				'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . "+" . intval($atts['get_days']) . " days")) ),
-				'compare'			=> 'BETWEEN',
-				'type'				=> 'DATE'
-				),
-			);
+					'key'				=> 'e2_start',
+					'value'				=> array( current_time('Y-m-d'), date('Y-m-d', strtotime(current_time('Y-m-d') . '+' . intval($atts['get_days']) . ' days')) ),
+					'compare'			=> 'BETWEEN',
+					'type'				=> 'DATETIME'
+			)
+		);
 		$the_query = new WP_Query( $args );
 
 		// The Loop
@@ -265,12 +266,11 @@ class Elks_Events_Public {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 				$the_id = get_the_id();
-				$the_start = new DateTime(get_post_meta( $the_id, 'e2_fb_start', true ));
+				$the_start = new DateTime(get_post_meta( $the_id, 'e2_start', true ));
 				$is_first = false;
 				if ($the_start->format('Y-m-d') != $previous_date->format('Y-m-d')) {
 					$is_first = true;
 					$start_formatted = $the_start->format('Y-m-d');
-					
 					$output = $output . '<div><br><h2 style="font-size:18px !important;line-height:125% !important;">';
 					if ($start_formatted == current_time('Y-m-d')) {
 						//IF Today
@@ -286,10 +286,15 @@ class Elks_Events_Public {
 
 				}
 
+				$e2_location = get_post_meta( $the_id, 'e2_location', true );
+				if (!empty($e2_location)) {
+					$e2_location = ' | ' . $e2_location;
+				}
+				
 				$previous_date = $the_start;
 				$output = $output . '<div style="margin-top:5px; padding-top:5px; font-size: 14px !important; line-height: 125% !important; color: #404040 !important;">';
 				$output = $output . '	<a class="url" href="https://www.facebook.com/events/319480168399057/" target="_blank" style="word-wrap:break-word;-ms-text-size-adjust: 100%;-webkit-text-size-adjust:100%;color:#be1522;font-weight:bold;text-decoration:none;">' . get_the_title() . '</a>';
-				$output = $output . '	<br><span>'. $the_start->format('g:ia') . ' | ' . get_post_meta( $the_id, 'e2_fb_location', true ) . '</span>';
+				$output = $output . '	<br><span>'. $the_start->format('g:ia') . $e2_location . '</span>';
 				$output = $output . '</div>';
 			}
 			
