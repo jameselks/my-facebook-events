@@ -151,7 +151,7 @@ class Elks_Events_Public {
 				} else {
 					$output = $output . '<div class="event container-fluid">';
 				}
-				$output = $output . '	<div class="row">';
+				$output = $output . '	<div id="' . $the_id . '" class="row">';
 				$output = $output . '		<div class="col-sm-4 event-image-container">';
 				$output = $output . 			get_the_post_thumbnail( $the_id, array(400, 200) );
 				$output = $output . '		</div>';
@@ -293,7 +293,7 @@ class Elks_Events_Public {
 				
 				$previous_date = $the_start;
 				$output = $output . '<div style="margin-top:5px; padding-top:5px; font-size: 14px !important; line-height: 125% !important; color: #404040 !important;">';
-				$output = $output . '	<a class="url" href="https://www.facebook.com/events/319480168399057/" target="_blank" style="word-wrap:break-word;-ms-text-size-adjust: 100%;-webkit-text-size-adjust:100%;color:#be1522;font-weight:bold;text-decoration:none;">' . get_the_title() . '</a>';
+				$output = $output . '	<a class="url" href=https://strobed.com.au/#"' . $the_id . '" style="word-wrap:break-word;-ms-text-size-adjust: 100%;-webkit-text-size-adjust:100%;color:#be1522;font-weight:bold;text-decoration:none;">' . get_the_title() . '</a>';
 				$output = $output . '	<br><span>'. $the_start->format('g:ia') . $e2_location . '</span>';
 				$output = $output . '</div>';
 			}
