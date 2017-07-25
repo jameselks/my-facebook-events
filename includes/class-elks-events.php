@@ -175,7 +175,7 @@ class Elks_Events {
 		$this->loader->add_filter( 'e2_geocode_place', $plugin_admin, 'e2_geocode_place', 10, 4 );
 
 		//Custom columns on the 'edit events' page
-		//$this->loader->add_filter( 'manage_posts_columns', 'e2_set_custom_columns');
+		$this->loader->add_filter( 'manage_posts_columns', $plugin_admin 'e2_set_custom_columns');
 		//$this->loader->add_action( 'manage_e2_events_posts_custom_column', 'e2_custom_columns_data', 10, 2 );
 		//$this->loader->add_filter('manage_posts_columns' , 'add_sticky_column');
 

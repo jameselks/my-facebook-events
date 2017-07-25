@@ -47,9 +47,13 @@ Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the
 
 ## Changelog
 
+=1.2.0=
+* Added email notifications for errors
+* Filtered list of events
+
 = 1.1.0 =
 * Renamed to 'My Facebook Events'
-* Simplified adding a new custom event (not imported)
+* Simplified manually adding a new custom event (not imported)
 
 = 1.0.0 =
 * Initial release. Functional.
