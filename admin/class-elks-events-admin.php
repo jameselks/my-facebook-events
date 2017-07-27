@@ -113,37 +113,75 @@ class Elks_Events_Admin {
 		wp_localize_script( $this->plugin_name, 'e2js', array( 'fbAppId' => get_option('fb_app_id') ) );
 	}
 
-	public function e2_set_custom_columns( $columns, $post_type ) {
+	public function e2_set_custom_columns( $columns ) {
 	/*█████████████████████████████████████████████████████
 	 * Create custom columns in the 'events' editor.
 	 *
-	 * @since    1.1.0
+	 * @since    1.2.0
 	 */ 
-		switch ($post_type) {
-			case 'e2_events':
-			unset($columns['author']);
-			$columns['e2_event_start'] = __( 'Start', 'elks-events' );
-			$columns['e2_event_location'] = __( 'Location', 'elks-events' );
-			break;
-		}
+
+		unset($columns['author']);
+		unset($columns['date']);
+		$columns['e2_start'] = __( 'Start', 'elks-events' );
+		$columns['e2_location'] = __( 'Location', 'elks-events' );
 		return $columns;
 	}
 
-	public function e2_custom_columns_data( $column, $post_id ) {
+	public function e2_set_custom_columns_data( $column, $post_id ) {
 	/*█████████████████████████████████████████████████████
 	 * Fill custom columns in the 'events' editor with data.
 	 *
-	 * @since    1.1.0
+	 * @since    1.2.0
 	 */
 		switch ( $column ) {
 
-			case 'e2_event_start' :
-			echo get_post_meta( $post_id , 'e2_fb_event_start' , true ); 
+			case 'e2_start' :
+			echo get_post_meta( $post_id , 'e2_start' , true ); 
 			break;
 
-			case 'e2_event_location' :
-			echo get_post_meta( $post_id , 'e2_fb_location' , true ); 
+			case 'e2_location' :
+			echo get_post_meta( $post_id , 'e2_location' , true ); 
 			break;
+		}
+	}
+
+	public function e2_set_custom_columns_sort( $columns ) {
+	/*█████████████████████████████████████████████████████
+	 * Enable sorting for the custom 'events' columns
+	 *
+	 * @since    1.2.0
+	 */
+
+		$columns['e2_start'] = 'e2_start';
+		$columns['e2_location'] = 'e2_location';
+		return $columns;
+
+	}
+
+	public function e2_set_custom_columns_sort_order( $query ) {
+	/*█████████████████████████████████████████████████████
+	 * Enable sorting for the custom 'events' columns
+	 *
+	 * @since    1.2.0
+	 */
+
+		if( ! is_admin() ) {
+        	//Only sort in admin area
+			return;
+		}
+ 
+		$orderby = $query->get( 'orderby');
+	
+		switch ( $orderby ) {
+			case 'e2_location' :
+				$query->set('meta_key','e2_location');
+				$query->set('orderby','meta_value');
+				break;
+
+			case 'e2_date' :
+				$query->set('meta_key','e2_location');
+				$query->set('orderby','meta_value_date');
+				break;
 		}
 	}
 

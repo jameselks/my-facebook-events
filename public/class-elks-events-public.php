@@ -206,7 +206,7 @@ class Elks_Events_Public {
 	}
 
 	/**
-	 * Creat the custom post type.
+	 * Create the custom post type.
 	 *
 	 * @since    1.0.0
 	 */

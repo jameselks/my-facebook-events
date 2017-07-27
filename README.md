@@ -49,7 +49,7 @@ Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the
 
 =1.2.0=
 * Added email notifications for errors
-* Filtered list of events
+* Enable sorting of events by start date and location in admin
 
 = 1.1.0 =
 * Renamed to 'My Facebook Events'
