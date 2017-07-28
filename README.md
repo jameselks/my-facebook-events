@@ -48,7 +48,8 @@ Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the
 ## Changelog
 
 =1.2.0=
-* Added email notifications for errors
+* Email administrator on Facebook import errors
+* Improve logging
 * Enable sorting of events by start date and location in admin
 
 = 1.1.0 =

@@ -14,7 +14,11 @@
 
 
 if (isset($_POST['import'])) {
-	do_action('e2_cron_process_events', true);
+	do_action('e2_process_events', true);
+}
+
+if (isset($_POST['expiry'])) {
+	do_action('e2_fb_check_expiry', true);
 }
 
 ?>
@@ -74,6 +78,7 @@ if (isset($_POST['import'])) {
 		</div>
 		<?php submit_button( 'Save settings', 'primary', 'save', false ); ?>
 	</form>
+	
 	<form action="" method="post" id="e2-import">
 		<?php submit_button( 'Import Facebook events now', 'secondary', 'import', false ); ?>
 	</form>
