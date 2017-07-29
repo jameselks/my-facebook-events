@@ -171,6 +171,9 @@ class Elks_Events {
 		// Exchange short-lived FB token for long-lived FB token
 		$this->loader->add_action( 'wp_ajax_e2_fb_tokenexchange', $plugin_admin, 'e2_fb_tokenexchange' );
 
+		//Check token expiry
+		$this->loader->add_action( 'e2_fb_tokenexpiry', $plugin_admin, 'e2_fb_tokenexpiry' );
+
 		// Filters for inserting an image and geocoding a place
 		$this->loader->add_filter( 'e2_insert_image', $plugin_admin, 'e2_insert_image', 10, 2 );
 		$this->loader->add_filter( 'e2_geocode_place', $plugin_admin, 'e2_geocode_place', 10, 4 );

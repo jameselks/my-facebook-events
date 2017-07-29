@@ -48,9 +48,10 @@ Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the
 ## Changelog
 
 =1.2.0=
-* Email administrator on Facebook import errors
-* Improve logging
 * Enable sorting of events by start date and location in admin
+* Email administrator on Facebook import errors
+* Check Facebook access token expiry and email administrator 10 days before
+* Improve logging
 
 = 1.1.0 =
 * Renamed to 'My Facebook Events'

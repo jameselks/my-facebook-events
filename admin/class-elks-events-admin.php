@@ -202,6 +202,8 @@ class Elks_Events_Admin {
 	 * @since    1.2.0
 	 */
 
+		do_action('e2_fb_tokenexpiry');
+
 	}
 
 	public function e2_process_events($echo_results) {
@@ -253,6 +255,70 @@ class Elks_Events_Admin {
 		file_put_contents(ABSPATH . 'wp-content/uploads/e2log/e2log_'.current_time('Y-m-d').'.txt', $text, FILE_APPEND);
 	}
 
+	public function e2_fb_tokenexpiry( $token ) {
+	/*█████████████████████████████████████████████████████
+	 * Check the expiry date of the token.
+	 *
+	 * @since    1.2.0
+	 */
+
+		$token = get_option('fb_longtoken');
+		do_action('e2_log', 'Start e2_fb_tokenexpiry', true);
+
+		// Create the Facebook object.
+		$fb = new Facebook\Facebook([
+			'app_id' => get_option('fb_app_id'),
+			'app_secret' => get_option('fb_app_secret'),
+			'default_graph_version' => 'v2.6',
+			'default_access_token' => $token,
+		]);
+
+		// Create the Facebook Graph request (but don't execute - that happens later).
+		$request = $fb->request(
+			'GET',
+			'/debug_token?input_token=' . $token
+		);
+
+		// Set the max script timeout to 20s from now
+		set_time_limit(10);
+
+		// Send the request to Graph.
+		try {
+			$response = $fb->getClient()->sendRequest($request);
+
+		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			// When Graph returns an error
+			$fb_error = 'Facebook Graph returned an error: ' . $e->getMessage();
+			do_action('e2_log', $fb_error, true);
+			exit;
+
+		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+			// When validation fails or other local issues
+			$fb_error = 'Facebook SDK returned an error: ' . $e->getMessage();
+			do_action('e2_log', $fb_error, true);
+			exit;
+
+		}
+
+		// Process the Graph response.
+		$token = $response->getGraphObject();
+		$notify = new DateTime(date("Y-m-d", strtotime('+10 days')));
+		$token_expires = $token['expires_at'];
+		
+		//If token expires within 10 days - send user an email and log it.
+		$expires_days = $notify->diff($token_expires)->format('%a');
+		if ($token_expires < $notify ) {
+			$message = "Your Facebook authentication expires in " . $expires_days . ' days.';
+			do_action('e2_log', $message, true);
+			$message = $message . PHP_EOL . PHP_EOL . 'Log in to your website and re-authenticate Facebook Events:';
+			$message = $message . PHP_EOL . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=elks-events';
+			do_action('e2_mail', $message);
+		}
+
+		do_action('e2_log', 'Finish e2_fb_tokenexpiry - ' . $expires_days . ' days before expiry', true);
+
+	}
+
 	public function e2_fb_tokenexchange() {
 	/*█████████████████████████████████████████████████████
 	 * Exchange a short-lived Facebook authentication for a long-lived token.
@@ -262,21 +328,24 @@ class Elks_Events_Admin {
 		$fb = new Facebook\Facebook([
 			'app_id' => get_option('fb_app_id'),
 			'app_secret' => get_option('fb_app_secret'),
-			'default_graph_version' => 'v2.7',
+			'default_graph_version' => 'v2.6',
 		]);
 
 		$helper = $fb->getJavaScriptHelper();
 
 		try {
-		  $accessToken = $helper->getAccessToken();
+			$accessToken = $helper->getAccessToken();
+
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
 			// When Graph returns an error
 			do_action('e2_log', 'Token exchange - Facebook Graph returned an error: ' . $e->getMessage(), true);
 			exit;
+
 		} catch(Facebook\Exceptions\FacebookSDKException $e) {
 			// When validation fails or other local issues
 			do_action('e2_log', 'Token exchange - Facebook SDK returned an error: ' . $e->getMessage(), true);
 			exit;
+
 		}
 
 		if (! isset($accessToken)) {
@@ -434,7 +503,7 @@ class Elks_Events_Admin {
 			// When validation fails or other local issues
 			$fb_error = 'Facebook SDK returned an error: ' . $e->getMessage();
 			do_action('e2_log', $fb_error, true);
-			do_action('e2_log', $fb_error);
+			do_action('e2_mail', $fb_error);
 			if($echo_results) {
 				echo $fb_error;
 			}
