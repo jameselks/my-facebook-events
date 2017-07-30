@@ -166,21 +166,33 @@ class Elks_Events {
 		// Primary methods - import events and generate JSON
 		$this->loader->add_action( 'e2_import_events', $plugin_admin, 'e2_import_events' );
 		$this->loader->add_action( 'e2_generate_map_json', $plugin_admin, 'e2_generate_map_json' );
+		$this->loader->add_action( 'e2_process_events', $plugin_admin, 'e2_process_events' );
 
 		// Exchange short-lived FB token for long-lived FB token
 		$this->loader->add_action( 'wp_ajax_e2_fb_tokenexchange', $plugin_admin, 'e2_fb_tokenexchange' );
+
+		//Check token expiry
+		$this->loader->add_action( 'e2_fb_tokenexpiry', $plugin_admin, 'e2_fb_tokenexpiry' );
 
 		// Filters for inserting an image and geocoding a place
 		$this->loader->add_filter( 'e2_insert_image', $plugin_admin, 'e2_insert_image', 10, 2 );
 		$this->loader->add_filter( 'e2_geocode_place', $plugin_admin, 'e2_geocode_place', 10, 4 );
 
 		//Custom columns on the 'edit events' page
-		//$this->loader->add_filter( 'manage_posts_columns', 'e2_set_custom_columns');
-		//$this->loader->add_action( 'manage_e2_events_posts_custom_column', 'e2_custom_columns_data', 10, 2 );
-		//$this->loader->add_filter('manage_posts_columns' , 'add_sticky_column');
+		$this->loader->add_filter( 'manage_edit-e2_events_columns', $plugin_admin, 'e2_set_custom_columns' );
+		$this->loader->add_action( 'manage_e2_events_posts_custom_column', $plugin_admin, 'e2_set_custom_columns_data', 10, 2 );
+		$this->loader->add_filter( 'manage_edit-e2_events_sortable_columns', $plugin_admin, 'e2_set_custom_columns_sort' );
+		$this->loader->add_action( 'pre_get_posts', $plugin_admin, 'e2_set_custom_columns_sort_order' );
 
-		//Cron
-		$this->loader->add_action( 'e2_cron_process_events', $plugin_admin, 'e2_process_events' );
+		// Write log to log file
+		$this->loader->add_action( 'e2_log', $plugin_admin, 'e2_log', 10, 2 );
+
+		// Email notification
+		$this->loader->add_action( 'e2_mail', $plugin_admin, 'e2_mail' );
+
+		//Crons
+		$this->loader->add_action( 'e2_cron_hourly', $plugin_admin, 'e2_hourly' );
+		$this->loader->add_action( 'e2_cron_daily', $plugin_admin, 'e2_daily' );
 
 	}
 

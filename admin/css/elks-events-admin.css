@@ -6,6 +6,11 @@
 #e2 h2 {
 	font-weight: bold;
 	text-transform: uppercase;
+	margin-bottom: 0.5em;
+}
+
+#e2 #e2-settings div.form-table {
+	margin: 2em 0;
 }
 
 #e2 .form-table input {

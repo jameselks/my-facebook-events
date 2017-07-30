@@ -31,9 +31,14 @@ class Elks_Events_Activator {
 	 */
 	public static function activate() {
 
-		$timestamp = wp_next_scheduled( 'e2_cron_process_events' );
+		$timestamp = wp_next_scheduled( 'e2_cron_hourly' );
 		if( $timestamp == false ){
-			wp_schedule_event( time(), 'hourly', 'e2_cron_process_events' );
+			wp_schedule_event( time(), 'hourly', 'e2_cron_hourly' );
+		}
+
+		$timestamp = wp_next_scheduled( 'e2_cron_daily' );
+		if( $timestamp == false ){
+			wp_schedule_event( time(), 'daily', 'e2_cron_daily' );
 		}
 
 	}
