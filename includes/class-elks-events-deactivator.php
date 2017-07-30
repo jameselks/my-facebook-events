@@ -34,6 +34,12 @@ class Elks_Events_Deactivator {
 		$timestamp = wp_next_scheduled( 'e2_cron_process_events' );
 		wp_unschedule_event($timestamp, 'e2_cron_process_events' );
 
+		$timestamp = wp_next_scheduled( 'e2_cron_hourly' );
+		wp_unschedule_event($timestamp, 'e2_cron_hourly' );
+
+		$timestamp = wp_next_scheduled( 'e2_cron_daily' );
+		wp_unschedule_event($timestamp, 'e2_cron_daily' );
+
 	}
 
 }

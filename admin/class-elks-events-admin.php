@@ -61,7 +61,7 @@ class Elks_Events_Admin {
 	 * @since    1.0.0
 	 */
 
-	add_menu_page('Facebook Events &mdash; Settings', 'Facebook Events', 'manage_options', $this->plugin_name, array($this, 'e2_admin_page'), 'dashicons-admin-generic');
+		add_menu_page('Facebook Events &mdash; Settings', 'Facebook Events', 'manage_options', $this->plugin_name, array($this, 'e2_admin_page'), 'dashicons-admin-generic');
 
 	}
 
@@ -72,7 +72,7 @@ class Elks_Events_Admin {
 	 * @since    1.0.0
 	 */
 
-	echo require "partials/elks-events-admin-display.php"; 
+		echo require "partials/elks-events-admin-display.php"; 
 
 	}
 
@@ -113,38 +113,97 @@ class Elks_Events_Admin {
 		wp_localize_script( $this->plugin_name, 'e2js', array( 'fbAppId' => get_option('fb_app_id') ) );
 	}
 
-	public function e2_set_custom_columns( $columns, $post_type ) {
+	public function e2_set_custom_columns( $columns ) {
 	/*█████████████████████████████████████████████████████
 	 * Create custom columns in the 'events' editor.
 	 *
-	 * @since    1.1.0
+	 * @since    1.2.0
 	 */ 
-		switch ($post_type) {
-			case 'e2_events':
-			unset($columns['author']);
-			$columns['e2_event_start'] = __( 'Start', 'elks-events' );
-			$columns['e2_event_location'] = __( 'Location', 'elks-events' );
-			break;
-		}
+
+		unset($columns['author']);
+		unset($columns['date']);
+		$columns['e2_start'] = __( 'Start', 'elks-events' );
+		$columns['e2_location'] = __( 'Location', 'elks-events' );
 		return $columns;
 	}
 
-	public function e2_custom_columns_data( $column, $post_id ) {
+	public function e2_set_custom_columns_data( $column, $post_id ) {
 	/*█████████████████████████████████████████████████████
 	 * Fill custom columns in the 'events' editor with data.
 	 *
-	 * @since    1.1.0
+	 * @since    1.2.0
 	 */
 		switch ( $column ) {
 
-			case 'e2_event_start' :
-			echo get_post_meta( $post_id , 'e2_fb_event_start' , true ); 
-			break;
+			case 'e2_start' :
+				echo get_post_meta( $post_id , 'e2_start' , true ); 
+				break;
 
-			case 'e2_event_location' :
-			echo get_post_meta( $post_id , 'e2_fb_location' , true ); 
-			break;
+			case 'e2_location' :
+				echo get_post_meta( $post_id , 'e2_location' , true ); 
+				break;
 		}
+	}
+
+	public function e2_set_custom_columns_sort( $columns ) {
+	/*█████████████████████████████████████████████████████
+	 * Enable sorting for the custom 'events' columns
+	 *
+	 * @since    1.2.0
+	 */
+
+		$columns['e2_start'] = 'e2_start';
+		$columns['e2_location'] = 'e2_location';
+		return $columns;
+
+	}
+
+	public function e2_set_custom_columns_sort_order( $query ) {
+	/*█████████████████████████████████████████████████████
+	 * Enable sorting for the custom 'events' columns
+	 *
+	 * @since    1.2.0
+	 */
+
+		if( ! is_admin() ) {
+        	//Only sort in admin area
+			return;
+		}
+ 
+		$orderby = $query->get( 'orderby');
+	
+		switch ( $orderby ) {
+			case 'e2_location' :
+				$query->set('meta_key','e2_location');
+				$query->set('orderby','meta_value');
+				break;
+
+			case 'e2_date' :
+				$query->set('meta_key','e2_location');
+				$query->set('orderby','meta_value_date');
+				break;
+		}
+	}
+
+	public function e2_hourly() {
+	/*█████████████████████████████████████████████████████
+	 * Actions to be performed every hour.
+	 *
+	 * @since    1.2.0
+	 */
+
+		do_action('e2_process_events');
+	}
+
+	public function e2_daily() {
+	/*█████████████████████████████████████████████████████
+	 * Actions to be performed every day.
+	 *
+	 * @since    1.2.0
+	 */
+
+		do_action('e2_fb_tokenexpiry');
+
 	}
 
 	public function e2_process_events($echo_results) {
@@ -157,6 +216,106 @@ class Elks_Events_Admin {
 
 		do_action('e2_import_events', $echo_results);
 		do_action('e2_generate_map_json');
+	}
+
+	public function e2_mail( $message ) {
+	/*█████████████████████████████████████████████████████
+	 * Send mail to the site owner.
+	 *
+	 * @since    1.2.0
+	 */
+
+		$message = $message . PHP_EOL . PHP_EOL . PHP_EOL . 'Sent automatically from ' . get_bloginfo('wpurl') . '/wp-admin';
+		$to = get_option('admin_email');
+		$from = get_bloginfo('name');
+		//$headers = 'From: ' . $from . '<' . $to . '>';
+
+		wp_mail($to, 'Error — ' . $from, $message);
+		//wp_mail($to, 'Error — ' . $from, $message, $headers);
+
+	}
+
+	public function e2_log( $text, $timestamp = false ) {
+	/*█████████████████████████████████████████████████████
+	 * Write text to log file.
+	 *
+	 * @since    1.2.0
+	 */	
+
+		// Add timestamp
+		if ($timestamp) {
+			$text = '[' . current_time('Y-m-d h:i:sa') . '] ' . $text;	
+		}
+
+		$text = $text . PHP_EOL;
+
+		if (!file_exists(ABSPATH . 'wp-content/uploads/e2log')) {
+			wp_mkdir_p(ABSPATH . 'wp-content/uploads/e2log');
+		}	
+		file_put_contents(ABSPATH . 'wp-content/uploads/e2log/e2log_'.current_time('Y-m-d').'.txt', $text, FILE_APPEND);
+	}
+
+	public function e2_fb_tokenexpiry( $token ) {
+	/*█████████████████████████████████████████████████████
+	 * Check the expiry date of the token.
+	 *
+	 * @since    1.2.0
+	 */
+
+		$token = get_option('fb_longtoken');
+		do_action('e2_log', 'Start e2_fb_tokenexpiry', true);
+
+		// Create the Facebook object.
+		$fb = new Facebook\Facebook([
+			'app_id' => get_option('fb_app_id'),
+			'app_secret' => get_option('fb_app_secret'),
+			'default_graph_version' => 'v2.6',
+			'default_access_token' => $token,
+		]);
+
+		// Create the Facebook Graph request (but don't execute - that happens later).
+		$request = $fb->request(
+			'GET',
+			'/debug_token?input_token=' . $token
+		);
+
+		// Set the max script timeout to 20s from now
+		set_time_limit(10);
+
+		// Send the request to Graph.
+		try {
+			$response = $fb->getClient()->sendRequest($request);
+
+		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			// When Graph returns an error
+			$fb_error = 'Facebook Graph returned an error: ' . $e->getMessage();
+			do_action('e2_log', $fb_error, true);
+			exit;
+
+		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+			// When validation fails or other local issues
+			$fb_error = 'Facebook SDK returned an error: ' . $e->getMessage();
+			do_action('e2_log', $fb_error, true);
+			exit;
+
+		}
+
+		// Process the Graph response.
+		$token = $response->getGraphObject();
+		$notify = new DateTime(date("Y-m-d", strtotime('+10 days')));
+		$token_expires = $token['expires_at'];
+		
+		//If token expires within 10 days - send user an email and log it.
+		$expires_days = $notify->diff($token_expires)->format('%a');
+		if ($token_expires < $notify ) {
+			$message = "Your Facebook authentication expires in " . $expires_days . ' days.';
+			do_action('e2_log', $message, true);
+			$message = $message . PHP_EOL . PHP_EOL . 'Log in to your website and re-authenticate Facebook Events:';
+			$message = $message . PHP_EOL . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=elks-events';
+			do_action('e2_mail', $message);
+		}
+
+		do_action('e2_log', 'Finish e2_fb_tokenexpiry - ' . $expires_days . ' days before expiry', true);
 
 	}
 
@@ -175,20 +334,24 @@ class Elks_Events_Admin {
 		$helper = $fb->getJavaScriptHelper();
 
 		try {
-		  $accessToken = $helper->getAccessToken();
+			$accessToken = $helper->getAccessToken();
+
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
-		  // When Graph returns an error
-		  echo 'Graph returned an error: ' . $e->getMessage();
-		  exit;
+			// When Graph returns an error
+			do_action('e2_log', 'Token exchange - Facebook Graph returned an error: ' . $e->getMessage(), true);
+			exit;
+
 		} catch(Facebook\Exceptions\FacebookSDKException $e) {
-		  // When validation fails or other local issues
-		  echo 'Facebook SDK returned an error: ' . $e->getMessage();
-		  exit;
+			// When validation fails or other local issues
+			do_action('e2_log', 'Token exchange - Facebook SDK returned an error: ' . $e->getMessage(), true);
+			exit;
+
 		}
 
 		if (! isset($accessToken)) {
-		  echo 'No cookie set or no OAuth data could be obtained from cookie.';
-		  exit;
+			//If cookie not set
+			do_action('e2_log', 'No cookie set or no OAuth data could be obtained from cookie.', true);
+			exit;
 		}
 
 		// OAuth 2.0 client handler
@@ -197,23 +360,14 @@ class Elks_Events_Admin {
 		// Exchanges a short-lived access token for a long-lived one
 		$accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
 
+		// Add the long-lived token to the plugin options
 		update_option( 'fb_longtoken', $accessToken );
 
-		echo $accessToken;
+		//echo $accessToken;
 		$_SESSION['fb_access_token'] = (string) $accessToken;
 
 		// User is logged in!
 	    wp_die();
-	}
-
-	public function e2_fb_tokenexpiry() {
-	/*█████████████████████████████████████████████████████
-	 * Alert the user when a Facebook token is about to expire.
-	 *
-	 * @since    1.0.0
-	 */	
-
-
 	}
 
 	public function e2_geocode_place($place, $radius, $radius_center, $api_key) {
@@ -295,14 +449,14 @@ class Elks_Events_Admin {
 		update_post_meta($post_id, 'e2_fb_cover', $cover_url);
 	}
 
-	public function e2_import_events($echo_results) {
+	public function e2_import_events( $echo_results ) {
 	/*█████████████████████████████████████████████████████
 	 * Import Facebook events.
 	 *
 	 * @since    1.0.0
 	 */	
 
-		$log = 'Started at:  ' . current_time('Y-m-d h:i:sa').' Wordpress time.' . PHP_EOL;
+		do_action('e2_log', 'Start e2_process_events', true);
 
 		if ($echo_results) {
 			echo '<div id="progress"><p>Connecting to Facebook</p>';
@@ -319,13 +473,13 @@ class Elks_Events_Admin {
 
 		// Create the Facebook Graph request (but don't execute - that happens later).
 		$request = $fb->request(
-		  'GET',
-		  '/me/events',
-		  array(
-		    'fields' => 'id,name,description,cover,start_time,place,updated_time',
-		    'type' => 'attending',
-		    'limit' => get_option('fb_get_events')
-		  )
+			'GET',
+			'/me/events',
+			array(
+				'fields' => 'id,name,description,cover,start_time,place,updated_time',
+				'type' => 'attending',
+				'limit' => get_option('fb_get_events')
+			)
 		);
 
 		// Set the max script timeout to 20s from now
@@ -333,17 +487,27 @@ class Elks_Events_Admin {
 
 		// Send the request to Graph.
 		try {
-		  $response = $fb->getClient()->sendRequest($request);
+			$response = $fb->getClient()->sendRequest($request);
 
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
-		  // When Graph returns an error
-		  $log = $log . 'Graph returned an error: ' . $e->getMessage() . PHP_EOL;
-		  exit;
+			// When Graph returns an error
+			$fb_error = 'Facebook Graph returned an error: ' . $e->getMessage();
+			do_action('e2_log', $fb_error, true);
+			do_action('e2_mail', $fb_error);
+			if($echo_results) {
+				echo $fb_error;
+			}
+			exit;
 
 		} catch(Facebook\Exceptions\FacebookSDKException $e) {
-		  // When validation fails or other local issues
-		  $log = $log . 'Facebook SDK returned an error: ' . $e->getMessage() . PHP_EOL;
-		  exit;
+			// When validation fails or other local issues
+			$fb_error = 'Facebook SDK returned an error: ' . $e->getMessage();
+			do_action('e2_log', $fb_error, true);
+			do_action('e2_mail', $fb_error);
+			if($echo_results) {
+				echo $fb_error;
+			}
+			exit;
 
 		}
 
@@ -450,7 +614,9 @@ class Elks_Events_Admin {
 						};
 					
 						$this_img = get_post_meta( $this_id, 'e2_fb_cover', true )[0];
-						$e_cover_basename = reset(explode('?', basename($e_cover)));
+
+						$e_cover_basename = explode('?', basename($e_cover));
+						$e_cover_basename = reset($e_cover_basename);
 						$this_img_basename = basename($this_img);				
 						$e_cover_basename_noext = pathinfo($e_cover_basename, PATHINFO_FILENAME);
 						
@@ -505,11 +671,8 @@ class Elks_Events_Admin {
 			echo '</div>';
 		}
 
-		$log = $log . 'Completed at ' . current_time('Y-m-d h:i:sa') . ' Wordpress time.' . PHP_EOL . PHP_EOL;
-		if (!file_exists(ABSPATH . 'wp-content/uploads/e2log')) {
-		    wp_mkdir_p(ABSPATH . 'wp-content/uploads/e2log');
-		}	
-		file_put_contents(ABSPATH . 'wp-content/uploads/e2log/e2log_'.current_time('Y-m-d').'.txt', $log, FILE_APPEND);
+		do_action('e2_log', trim($log));
+		do_action('e2_log', 'Finish e2_process_events' . PHP_EOL, true);
 
 	}
 
