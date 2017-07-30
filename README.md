@@ -1,5 +1,5 @@
 # My Facebook Events
-Import Facebook events from an individual Facebook account to Wordpress posts. Then display them in a list or a map. This is still very early and should be considered a work in progress.
+Import Facebook events from an individual Facebook account to Wordpress posts. Then display them in a list or a map.
 
 Allows you to:
 - Download events that you've RSVP'd to from Facebook (including image)
@@ -31,7 +31,31 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Configuration
 
-... coming ...
+### Create a Facebook app
+
+* Log in to Facebook
+* Visit [Facebook for developers](https://developers.facebook.com/)
+* Select My `Apps` > `Add a new app`
+* Go to `Dashboard`
+* Copy your app ID and app secret into the Facebook Events settings page.
+* Go to `Settings`
+* Add your domain to `App Domains` (e.g. test.com)
+* Select `Add platform` (at the bottom)
+* Select `Website` and add your domain (e.g. test.com)
+
+### Create Google API keys
+
+* Create a [Google Maps Javascript API key](https://developers.google.com/maps/documentation/javascript/get-api-key)
+* Copy the API key to the Facebook Events settings page.
+
+* Create a [Google Places PI key](https://developers.google.com/places/web-service/get-api-key#get_an_api_key)
+* Copy the API key to the Facebook Events settings page.
+
+### Configure plugin settings
+
+Using the instructions above, you should now have your Google API keys, Facebook app ID and Facebook app secret in the plugin settings.
+
+Configure the remaining fields using the instructions on the settings page.
 
 ## Usage
 
