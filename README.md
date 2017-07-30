@@ -16,11 +16,13 @@ Contributors: James Elks (jamesee)
 
 Requires at least: 4.4
 
-Tested up to: 4.5.3
+Tested up to: 4.8
 
 License: GPLv2 or later
 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+Tested with PHP 7.1.
 
 
 ## Installation
