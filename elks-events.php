@@ -16,7 +16,7 @@
  * Plugin Name:       My Facebook events
  * Plugin URI:        http://jameselks.com/elks-events
  * Description:       Personal event manager for Facebook events in Wordpress.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Author:            James Elks
  * Author URI:        http://jameselks.com
  * License:           GPL-2.0+
