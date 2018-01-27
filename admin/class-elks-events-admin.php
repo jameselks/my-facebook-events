@@ -477,7 +477,7 @@ class Elks_Events_Admin {
 			'/me/events',
 			array(
 				'fields' => 'id,name,description,cover,start_time,place,updated_time',
-				'type' => 'attending',
+				//'type' => 'attending',
 				'limit' => get_option('fb_get_events')
 			)
 		);

@@ -73,6 +73,9 @@ Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the
 
 ## Changelog
 
+=1.2.1=
+* Import events marked 'unsure' as well as 'attending'
+
 =1.2.0=
 * Enable sorting of events by start date and location in admin
 * Email administrator on Facebook import errors
