@@ -45,7 +45,7 @@ window.fbAsyncInit = function() {
 		appId      : e2js.fbAppId, //'490280357839488',
 		cookie     : true,  // enable cookies to allow the server to access the session
 		xfbml      : true,  // parse social plugins on this page
-		version    : 'v2.6' // use graph api version 2.6
+		version    : 'v2.12' // use graph api version 2.12
 	});
 
 	FB.getLoginStatus(function(response) {

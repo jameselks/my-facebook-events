@@ -16,7 +16,7 @@ Contributors: James Elks (jamesee)
 
 Requires at least: 4.4
 
-Tested up to: 4.8
+Tested up to: 4.9.4
 
 License: GPLv2 or later
 
@@ -72,6 +72,9 @@ To stop an imported event updating when it's Facebook source event is updated:
 Add a custom field with name `e2_stop_update` and value `true`. **Note:** if the custom field exists (with any value) the post will not be updated. So if you want the post to be updated again you'll need to delete the custom field from the post.
 
 ## Changelog
+
+=1.2.2=
+* Update to Facebook API version 2.12
 
 =1.2.1=
 * Import events marked 'unsure' as well as 'attending'

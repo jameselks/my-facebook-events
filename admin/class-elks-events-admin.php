@@ -269,7 +269,7 @@ class Elks_Events_Admin {
 		$fb = new Facebook\Facebook([
 			'app_id' => get_option('fb_app_id'),
 			'app_secret' => get_option('fb_app_secret'),
-			'default_graph_version' => 'v2.6',
+			'default_graph_version' => 'v2.12',
 			'default_access_token' => $token,
 		]);
 
@@ -328,7 +328,7 @@ class Elks_Events_Admin {
 		$fb = new Facebook\Facebook([
 			'app_id' => get_option('fb_app_id'),
 			'app_secret' => get_option('fb_app_secret'),
-			'default_graph_version' => 'v2.6',
+			'default_graph_version' => 'v2.12',
 		]);
 
 		$helper = $fb->getJavaScriptHelper();
@@ -467,7 +467,7 @@ class Elks_Events_Admin {
 		$fb = new Facebook\Facebook([
 			'app_id' => get_option('fb_app_id'),
 			'app_secret' => get_option('fb_app_secret'),
-			'default_graph_version' => 'v2.6',
+			'default_graph_version' => 'v2.12',
 			'default_access_token' => get_option('fb_longtoken'),
 		]);
 
