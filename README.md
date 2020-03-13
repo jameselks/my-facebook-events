@@ -5,8 +5,8 @@ Allows you to:
 - Download events that you've RSVP'd to from Facebook (including image)
 - Automatically update if the Facebook event changes
 - Add your own events
-- Attempt to geocode events without a location using Google Location API
-- Display todays events on a map using a shortcode
+- Attempt to geocode events without a location using Google Places API
+- Display todays events on a map using a shortcode using Google Maps API
 - Display a list of events using a shortcode
 
 
